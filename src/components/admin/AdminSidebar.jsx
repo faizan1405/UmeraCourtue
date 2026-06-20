@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import {
   LayoutDashboard, Package, FolderOpen, Home, Phone, FileText,
-  MessageSquare, LogOut, Menu, X, ChevronRight
+  MessageSquare, LogOut, Menu, X, ChevronRight, ShoppingCart
 } from 'lucide-react';
 import './AdminLayout.css';
 
@@ -14,6 +14,7 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/collections', label: 'Collections', icon: FolderOpen },
+  { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/homepage', label: 'Homepage', icon: Home },
   { href: '/admin/contact', label: 'Contact', icon: Phone },
   { href: '/admin/enquiries', label: 'Enquiries', icon: MessageSquare },

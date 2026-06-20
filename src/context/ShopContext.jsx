@@ -30,28 +30,28 @@ export const ShopProvider = ({ children }) => {
     if (mounted) localStorage.setItem('umera_wishlist', JSON.stringify(wishlist));
   }, [wishlist, mounted]);
 
-  const addToCart = (product, size) => {
+  const addToCart = (product, size, color) => {
     setCart(prev => {
-      const existingItem = prev.find(item => item.id === product.id && item.size === size);
+      const existingItem = prev.find(item => item.id === product.id && item.size === size && item.color === color);
       if (existingItem) {
         return prev.map(item =>
-          item.id === product.id && item.size === size
+          item.id === product.id && item.size === size && item.color === color
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { ...product, size, quantity: 1 }];
+      return [...prev, { ...product, size, color, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (id, size) => {
-    setCart(prev => prev.filter(item => !(item.id === id && item.size === size)));
+  const removeFromCart = (id, size, color) => {
+    setCart(prev => prev.filter(item => !(item.id === id && item.size === size && item.color === color)));
   };
 
-  const updateQuantity = (id, size, quantity) => {
+  const updateQuantity = (id, size, color, quantity) => {
     if (quantity < 1) return;
     setCart(prev => prev.map(item =>
-      item.id === id && item.size === size
+      item.id === id && item.size === size && item.color === color
         ? { ...item, quantity }
         : item
     ));
@@ -70,6 +70,10 @@ export const ShopProvider = ({ children }) => {
     return wishlist.some(item => item.id === id);
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
     <ShopContext.Provider value={{
       cart,
@@ -82,6 +86,7 @@ export const ShopProvider = ({ children }) => {
       toggleWishlist,
       isInWishlist,
       mounted,
+      clearCart,
     }}>
       {children}
     </ShopContext.Provider>

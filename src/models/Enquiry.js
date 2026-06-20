@@ -6,6 +6,7 @@ const EnquirySchema = new mongoose.Schema({
   items: [{
     productName: { type: String, default: '' },
     size: { type: String, default: '' },
+    color: { type: String, default: '' },
     quantity: { type: Number, default: 1 },
   }],
   status: {

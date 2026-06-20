@@ -7,12 +7,20 @@ import { useShop } from '@/context/ShopContext';
 
 export default function ProductDetailClient({ product, settings }) {
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(product.images?.[0] || '/product_1.png');
   const { addToCart } = useShop();
 
+  const isOutOfStock = product.stockStatus === 'out_of_stock';
   const whatsappNum = settings?.whatsapp || '7774056979';
+  
+  const specDetails = [
+    selectedSize ? `Size: ${selectedSize}` : '',
+    selectedColor ? `Color: ${selectedColor}` : ''
+  ].filter(Boolean).join(', ');
+  
   const whatsappMessage = encodeURIComponent(
-    product.whatsappMessage || `Hi Umera Couture, I would like to order/inquire about: ${product.name} ${selectedSize ? `(Size: ${selectedSize})` : ''}`
+    product.whatsappMessage || `Hi Umera Couture, I would like to order/inquire about: ${product.name}${specDetails ? ` (${specDetails})` : ''}`
   );
   const whatsappUrl = `https://wa.me/91${whatsappNum}?text=${whatsappMessage}`;
 
@@ -77,20 +85,49 @@ export default function ProductDetailClient({ product, settings }) {
             </div>
           )}
 
+          {product.colors?.length > 0 && (
+            <div className="size-selector" style={{ marginTop: '1.5rem' }}>
+              <div className="size-header">
+                <span>Select Color</span>
+              </div>
+              <div className="size-options">
+                {product.colors.map(color => (
+                  <button
+                    key={color}
+                    className={`size-btn ${selectedColor === color ? 'selected' : ''}`}
+                    onClick={() => setSelectedColor(color)}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="actions">
             <button
               className="btn-primary whatsapp-order-btn"
-              style={{ marginBottom: '10px' }}
+              style={{ 
+                marginBottom: '10px', 
+                opacity: isOutOfStock ? 0.5 : 1, 
+                cursor: isOutOfStock ? 'not-allowed' : 'pointer' 
+              }}
+              disabled={isOutOfStock}
               onClick={() => {
+                if (isOutOfStock) return;
                 if (!selectedSize && product.sizes?.length > 0) {
                   alert('Please select a size');
                   return;
                 }
-                addToCart(productForCart, selectedSize);
+                if (!selectedColor && product.colors?.length > 0) {
+                  alert('Please select a color');
+                  return;
+                }
+                addToCart(productForCart, selectedSize, selectedColor);
                 alert('Added to Bag!');
               }}
             >
-              <ShoppingBag size={20} /> Add to Bag
+              <ShoppingBag size={20} /> {isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
             </button>
             <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-outline whatsapp-order-btn">
               <MessageCircle size={20} /> Order via WhatsApp

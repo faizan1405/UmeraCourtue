@@ -68,11 +68,17 @@ export default function EnquiriesPage() {
                 <td><strong>{e.customerName || '—'}</strong></td>
                 <td>{e.phone ? <a href={`tel:${e.phone}`}>{e.phone}</a> : '—'}</td>
                 <td>
-                  {e.items?.map((item, i) => (
-                    <div key={i} style={{ fontSize: '0.85rem', marginBottom: '2px' }}>
-                      {item.productName} {item.size ? `(${item.size})` : ''} × {item.quantity || 1}
-                    </div>
-                  )) || '—'}
+                  {e.items?.map((item, i) => {
+                    const specs = [
+                      item.size ? `Size: ${item.size}` : '',
+                      item.color ? `Color: ${item.color}` : ''
+                    ].filter(Boolean).join(', ');
+                    return (
+                      <div key={i} style={{ fontSize: '0.85rem', marginBottom: '2px' }}>
+                        {item.productName} {specs ? `(${specs})` : ''} × {item.quantity || 1}
+                      </div>
+                    );
+                  }) || '—'}
                 </td>
                 <td><span className={`badge status-${e.status}`}>{e.status}</span></td>
                 <td>

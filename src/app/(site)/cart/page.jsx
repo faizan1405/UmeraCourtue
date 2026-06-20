@@ -27,6 +27,7 @@ export default function CartPage() {
           items: cart.map(item => ({
             productName: item.name,
             size: item.size,
+            color: item.color || '',
             quantity: item.quantity,
           })),
         }),
@@ -39,7 +40,11 @@ export default function CartPage() {
     if (customerName) message += `Name: ${customerName}\n`;
     if (customerPhone) message += `Phone: ${customerPhone}\n\n`;
     cart.forEach((item, index) => {
-      message += `${index + 1}. ${item.name}\n   Size: ${item.size}\n   Quantity: ${item.quantity}\n\n`;
+      const details = [
+        `Size: ${item.size}`,
+        item.color ? `Color: ${item.color}` : ''
+      ].filter(Boolean).join(', ');
+      message += `${index + 1}. ${item.name}\n   ${details}\n   Quantity: ${item.quantity}\n\n`;
     });
     message += `Please let me know the total price and payment details. Thank you!`;
     
@@ -63,27 +68,29 @@ export default function CartPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px' }}>
           <div style={{ border: '1px solid var(--color-border)', borderRadius: '4px' }}>
             {cart.map((item) => (
-              <div key={`${item.id}-${item.size}`} style={{ display: 'flex', padding: '20px', borderBottom: '1px solid var(--color-border)', gap: '20px' }}>
+              <div key={`${item.id}-${item.size}-${item.color || ''}`} style={{ display: 'flex', padding: '20px', borderBottom: '1px solid var(--color-border)', gap: '20px' }}>
                 <img src={item.image || '/product_1.png'} alt={item.name} style={{ width: '100px', height: '133px', objectFit: 'cover' }} />
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <h3 style={{ fontSize: '1.2rem', marginBottom: '5px' }}>{item.name}</h3>
-                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>Size: {item.size}</p>
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>
+                    Size: {item.size}{item.color ? ` | Color: ${item.color}` : ''}
+                  </p>
                   <p style={{ fontWeight: '500', marginBottom: '15px' }}>{item.price}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--color-border)' }}>
                       <button
                         style={{ padding: '5px 10px', backgroundColor: 'var(--color-beige)' }}
-                        onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity - 1)}
                       >-</button>
                       <span style={{ padding: '0 15px' }}>{item.quantity}</span>
                       <button
                         style={{ padding: '5px 10px', backgroundColor: 'var(--color-beige)' }}
-                        onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)}
                       >+</button>
                     </div>
                     <button
                       style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}
-                      onClick={() => removeFromCart(item.id, item.size)}
+                      onClick={() => removeFromCart(item.id, item.size, item.color)}
                     >
                       <Trash2 size={16} /> Remove
                     </button>
@@ -92,11 +99,16 @@ export default function CartPage() {
               </div>
             ))}
             
-            <div style={{ padding: '30px', backgroundColor: 'var(--color-beige)', textAlign: 'right' }}>
-              <p style={{ marginBottom: '10px', color: 'var(--color-text-muted)' }}>Shipping & taxes calculated at checkout</p>
-              <button onClick={() => setShowModal(true)} className="btn-primary" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>
-                Checkout via WhatsApp
-              </button>
+            <div style={{ padding: '30px', backgroundColor: 'var(--color-beige)', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>Shipping & taxes calculated at checkout</p>
+              <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                <button onClick={() => setShowModal(true)} className="btn-outline" style={{ padding: '14px 30px' }}>
+                  Inquire/Order via WhatsApp
+                </button>
+                <Link href="/checkout" className="btn-primary" style={{ padding: '14px 30px' }}>
+                  Proceed to Checkout
+                </Link>
+              </div>
             </div>
           </div>
         </div>
