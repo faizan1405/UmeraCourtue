@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop } from '@/context/ShopContext';
 import { ShoppingBag, ArrowLeft } from 'lucide-react';
+import Reveal from '@/components/ui/Reveal';
 
 export default function CheckoutClient() {
   const { cart, clearCart, mounted } = useShop();
@@ -76,7 +77,7 @@ export default function CheckoutClient() {
         <ShoppingBag size={48} style={{ color: 'var(--color-border)', marginBottom: '20px' }} />
         <h2 style={{ marginBottom: '15px' }}>Your bag is empty</h2>
         <p style={{ color: 'var(--color-text-muted)', marginBottom: '30px' }}>Add some luxury couture pieces to your bag before checking out.</p>
-        <Link href="/collections" className="btn-primary">View Collections</Link>
+        <Link href="/collections" className="btn-primary btn-click-feedback">View Collections</Link>
       </div>
     );
   }
@@ -312,25 +313,27 @@ export default function CheckoutClient() {
 
   return (
     <div className="container section-padding" style={{ minHeight: '80vh' }}>
-      <div style={{ marginBottom: '30px' }}>
+      <Reveal style={{ marginBottom: '30px' }}>
         <Link href="/cart" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
           <ArrowLeft size={16} /> Back to Bag
         </Link>
-      </div>
+      </Reveal>
 
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>Checkout</h1>
+      <Reveal>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>Checkout</h1>
+      </Reveal>
 
       {error && (
-        <div style={{ padding: '15px', backgroundColor: '#fce4ec', color: '#c62828', borderRadius: '4px', marginBottom: '30px', fontSize: '0.95rem' }}>
+        <Reveal style={{ padding: '15px', backgroundColor: '#fce4ec', color: '#c62828', borderRadius: '4px', marginBottom: '30px', fontSize: '0.95rem' }}>
           {error}
-        </div>
+        </Reveal>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'start' }}>
           
           {/* Billing & Shipping Details */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <Reveal style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} delay={100}>
             <h2 style={{ fontSize: '1.5rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px', marginBottom: '10px' }}>Shipping Details</h2>
             
             <div>
@@ -390,10 +393,10 @@ export default function CheckoutClient() {
               </p>
             </div>
 
-          </div>
+          </Reveal>
 
           {/* Order Summary */}
-          <div style={{ backgroundColor: 'var(--color-beige)', padding: '30px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <Reveal style={{ backgroundColor: 'var(--color-beige)', padding: '30px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '20px' }} delay={250}>
             <h2 style={{ fontSize: '1.5rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>Order Summary</h2>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -425,10 +428,35 @@ export default function CheckoutClient() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading || isPriceOnRequest} className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '10px', opacity: isPriceOnRequest ? 0.5 : 1, cursor: isPriceOnRequest ? 'not-allowed' : 'pointer' }}>
-              {loading ? 'Processing...' : 'Pay & Place Order'}
+            <button 
+              type="submit" 
+              disabled={loading || isPriceOnRequest} 
+              className="btn-primary btn-click-feedback" 
+              style={{ 
+                width: '100%', 
+                padding: '16px', 
+                fontSize: '1.1rem', 
+                marginTop: '10px', 
+                opacity: (loading || isPriceOnRequest) ? 0.5 : 1, 
+                cursor: (loading || isPriceOnRequest) ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '10px',
+                transition: 'var(--transition-smooth)'
+              }}
+            >
+              {loading ? (
+                <>
+                  <svg className="spin" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="3" fill="none" style={{ animation: 'spin 1s linear infinite' }}>
+                    <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.2)" />
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke="#fff" />
+                  </svg>
+                  Processing...
+                </>
+              ) : 'Pay & Place Order'}
             </button>
-          </div>
+          </Reveal>
 
         </div>
       </form>
@@ -447,7 +475,7 @@ export default function CheckoutClient() {
           alignItems: 'center',
           zIndex: 9999,
           fontFamily: 'Montserrat, sans-serif'
-        }}>
+        }} className="fade-in">
           <div style={{
             backgroundColor: '#ffffff',
             padding: '40px',
@@ -456,7 +484,7 @@ export default function CheckoutClient() {
             width: '90%',
             boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
             textAlign: 'center'
-          }}>
+          }} className="soft-scale">
             <div style={{ marginBottom: '20px' }}>
               <img src="/umera-logo.png" alt="Umera Couture" style={{ height: '50px', marginInline: 'auto' }} />
             </div>
@@ -494,6 +522,7 @@ export default function CheckoutClient() {
                   letterSpacing: '1px',
                   textTransform: 'uppercase'
                 }}
+                className="btn-click-feedback"
               >
                 Simulate Successful Payment
               </button>
@@ -517,6 +546,7 @@ export default function CheckoutClient() {
                   letterSpacing: '1px',
                   textTransform: 'uppercase'
                 }}
+                className="btn-click-feedback"
               >
                 Simulate Cancel/Close
               </button>

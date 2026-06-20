@@ -1,29 +1,38 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, MessageCircle, Eye } from 'lucide-react';
+import { Heart, Eye } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import { useSiteData } from '@/context/SiteDataContext';
+import Reveal from '@/components/ui/Reveal';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, delay = 0 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const { toggleWishlist, isInWishlist } = useShop();
   const { settings } = useSiteData();
 
   const productId = product._id || product.id;
   const isWishlisted = isInWishlist(productId);
-  const whatsappNum = settings?.whatsapp || '7774056979';
-
-  const whatsappMessage = encodeURIComponent(
-    product.whatsappMessage || `Hi Umera Couture, I would like to inquire about: ${product.name}`
-  );
-  const whatsappUrl = `https://wa.me/91${whatsappNum}?text=${whatsappMessage}`;
 
   const productForWishlist = { ...product, id: productId };
 
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    toggleWishlist(productForWishlist);
+    setClicked(true);
+  };
+
+  useEffect(() => {
+    if (clicked) {
+      const t = setTimeout(() => setClicked(false), 400);
+      return () => clearTimeout(t);
+    }
+  }, [clicked]);
+
   return (
-    <div className="product-card fade-in-up">
+    <Reveal className="product-card card-hover-lift" delay={delay}>
       <div
         className="product-image-container image-zoom-container"
         onMouseEnter={() => setIsHovered(true)}
@@ -39,17 +48,18 @@ const ProductCard = ({ product }) => {
         </Link>
         
         <button
-          className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleWishlist(productForWishlist);
-          }}
+          className={`wishlist-btn ${isWishlisted ? 'active' : ''} ${clicked ? 'heart-pop' : ''}`}
+          onClick={handleWishlistClick}
         >
           <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
         </button>
 
         <div className={`product-quick-actions ${isHovered ? 'visible' : ''}`}>
-          <Link href={`/product/${productId}`} className="quick-action-btn view-details" style={{ width: '100%', justifyContent: 'center' }}>
+          <Link 
+            href={`/product/${productId}`} 
+            className="quick-action-btn view-details btn-click-feedback" 
+            style={{ width: '100%', justifyContent: 'center' }}
+          >
             <Eye size={16} /> View Details
           </Link>
         </div>
@@ -66,7 +76,7 @@ const ProductCard = ({ product }) => {
           ))}
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 };
 

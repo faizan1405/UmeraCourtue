@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MessageCircle, Ruler, ShoppingBag } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
+import Reveal from '@/components/ui/Reveal';
 
 export default function ProductDetailClient({ product, settings }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(product.images?.[0] || '/product_1.png');
+  const [addingState, setAddingState] = useState('idle'); // 'idle' | 'adding' | 'added'
   const { addToCart } = useShop();
 
   const isOutOfStock = product.stockStatus === 'out_of_stock';
@@ -35,30 +37,64 @@ export default function ProductDetailClient({ product, settings }) {
     image: images[0],
   };
 
+  const handleAddToBag = () => {
+    if (isOutOfStock || isPriceMissing) return;
+    if (!selectedSize && product.sizes?.length > 0) {
+      alert('Please select a size');
+      return;
+    }
+    if (!selectedColor && product.colors?.length > 0) {
+      alert('Please select a color');
+      return;
+    }
+
+    setAddingState('adding');
+    setTimeout(() => {
+      addToCart(productForCart, selectedSize, selectedColor);
+      setAddingState('added');
+      setTimeout(() => {
+        setAddingState('idle');
+      }, 1500);
+    }, 600);
+  };
+
+  const getButtonText = () => {
+    if (isOutOfStock) return 'Out of Stock';
+    if (isPriceMissing) return 'Unavailable for Online Purchase';
+    if (addingState === 'adding') return 'Adding to Bag...';
+    if (addingState === 'added') return 'Added to Bag ✓';
+    return 'Add to Bag';
+  };
+
   return (
     <div className="product-detail-page section-padding container">
       <div className="product-detail-grid">
         
         {/* Images */}
-        <div className="product-gallery">
+        <Reveal className="product-gallery">
           <div className="thumbnail-list">
             {images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`${product.name} ${index + 1}`}
-                className={`thumbnail ${activeImage === img ? 'active' : ''}`}
+                className={`thumbnail btn-click-feedback ${activeImage === img ? 'active' : ''}`}
                 onClick={() => setActiveImage(img)}
               />
             ))}
           </div>
           <div className="main-image-container image-zoom-container">
-            <img src={activeImage} alt={product.name} className="main-image" />
+            <img 
+              key={activeImage}
+              src={activeImage} 
+              alt={product.name} 
+              className="main-image fade-in" 
+            />
           </div>
-        </div>
+        </Reveal>
 
         {/* Info */}
-        <div className="product-info-detail">
+        <Reveal className="product-info-detail" delay={150}>
           <h1>{product.name}</h1>
           <p className="price">{displayPrice}</p>
           
@@ -76,8 +112,9 @@ export default function ProductDetailClient({ product, settings }) {
                 {product.sizes.map(size => (
                   <button
                     key={size}
-                    className={`size-btn ${selectedSize === size ? 'selected' : ''}`}
+                    className={`size-btn btn-click-feedback ${selectedSize === size ? 'selected' : ''}`}
                     onClick={() => setSelectedSize(size)}
+                    style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
                   >
                     {size}
                   </button>
@@ -95,8 +132,9 @@ export default function ProductDetailClient({ product, settings }) {
                 {product.colors.map(color => (
                   <button
                     key={color}
-                    className={`size-btn ${selectedColor === color ? 'selected' : ''}`}
+                    className={`size-btn btn-click-feedback ${selectedColor === color ? 'selected' : ''}`}
                     onClick={() => setSelectedColor(color)}
+                    style={{ transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
                   >
                     {color}
                   </button>
@@ -105,30 +143,23 @@ export default function ProductDetailClient({ product, settings }) {
             </div>
           )}
 
-          <div className="actions">
+          <div className="actions" style={{ marginTop: '2rem' }}>
             <button
-              className="btn-primary whatsapp-order-btn"
+              className="btn-primary whatsapp-order-btn btn-click-feedback"
               style={{ 
                 marginBottom: '10px', 
-                opacity: (isOutOfStock || isPriceMissing) ? 0.5 : 1, 
-                cursor: (isOutOfStock || isPriceMissing) ? 'not-allowed' : 'pointer' 
+                opacity: (isOutOfStock || isPriceMissing || addingState !== 'idle') ? 0.5 : 1, 
+                cursor: (isOutOfStock || isPriceMissing || addingState !== 'idle') ? 'not-allowed' : 'pointer',
+                backgroundColor: addingState === 'added' ? 'var(--color-gold)' : 'var(--color-black)',
+                color: addingState === 'added' ? 'var(--color-black)' : '#fff',
+                borderColor: addingState === 'added' ? 'var(--color-gold)' : 'var(--color-black)',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
-              disabled={isOutOfStock || isPriceMissing}
-              onClick={() => {
-                if (isOutOfStock || isPriceMissing) return;
-                if (!selectedSize && product.sizes?.length > 0) {
-                  alert('Please select a size');
-                  return;
-                }
-                if (!selectedColor && product.colors?.length > 0) {
-                  alert('Please select a color');
-                  return;
-                }
-                addToCart(productForCart, selectedSize, selectedColor);
-                alert('Added to Bag!');
-              }}
+              disabled={isOutOfStock || isPriceMissing || addingState !== 'idle'}
+              onClick={handleAddToBag}
             >
-              <ShoppingBag size={20} /> {isOutOfStock ? 'Out of Stock' : (isPriceMissing ? 'Unavailable for Online Purchase' : 'Add to Bag')}
+              <ShoppingBag size={20} style={{ transform: addingState === 'added' ? 'scale(1.1)' : 'none', transition: 'transform 0.3s ease' }} /> 
+              {getButtonText()}
             </button>
             <p className="delivery-note">For Custom sizes, our team will guide you on measurements after checkout.</p>
           </div>
@@ -150,7 +181,7 @@ export default function ProductDetailClient({ product, settings }) {
               <p><i>Please note: Due to lighting on images, color may vary slightly.</i></p>
             </div>
           </div>
-        </div>
+        </Reveal>
 
       </div>
     </div>

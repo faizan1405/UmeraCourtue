@@ -3,7 +3,8 @@ import Link from 'next/link';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import { getSettings } from '@/lib/data';
-import { CheckCircle2, MessageCircle, ShoppingBag } from 'lucide-react';
+import { CheckCircle2, ShoppingBag } from 'lucide-react';
+import Reveal from '@/components/ui/Reveal';
 
 export default async function OrderSuccessPage({ params }) {
   const { orderId } = await params;
@@ -25,7 +26,7 @@ export default async function OrderSuccessPage({ params }) {
         <p style={{ color: 'var(--color-text-muted)', marginBottom: '30px' }}>
           We could not find order details for ID: {orderId}
         </p>
-        <Link href="/collections" className="btn-primary">
+        <Link href="/collections" className="btn-primary btn-click-feedback">
           Continue Shopping
         </Link>
       </div>
@@ -50,33 +51,35 @@ export default async function OrderSuccessPage({ params }) {
     <div className="container section-padding" style={{ minHeight: '80vh', maxWidth: '800px', margin: '0 auto' }}>
       
       {/* Success Hero Header */}
-      <div style={{ textAlign: 'center', marginBottom: '40px' }} className="fade-in-up">
-        <CheckCircle2 size={64} style={{ color: 'var(--color-gold)', marginBottom: '20px', marginInline: 'auto' }} />
+      <Reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <CheckCircle2 size={64} style={{ color: 'var(--color-gold)', marginBottom: '20px', marginInline: 'auto' }} className="badge-pop" />
         <h1 style={{ fontSize: '3rem', marginBottom: '10px' }}>Order Confirmed</h1>
         <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>
           Thank you for choosing Umera Couture. Your order has been placed successfully.
         </p>
-      </div>
+      </Reveal>
 
       {/* Payment Status Info */}
-      {order.paymentStatus === 'paid' ? (
-        <div style={{ backgroundColor: '#f4fbf7', borderLeft: '4px solid #2e7d32', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
-          <h3 style={{ marginBottom: '8px', color: '#2e7d32' }}>Payment Status: Successful</h3>
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
-            Thank you! Your payment has been received and verified. Your order is now confirmed.
-          </p>
-        </div>
-      ) : (
-        <div style={{ backgroundColor: 'var(--color-beige)', borderLeft: '4px solid var(--color-gold)', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
-          <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Payment Approval</h3>
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
-            Your order has been recorded successfully. Please coordinate with our support team to verify manual transfers or check status updates.
-          </p>
-        </div>
-      )}
+      <Reveal delay={150}>
+        {order.paymentStatus === 'paid' ? (
+          <div style={{ backgroundColor: '#f4fbf7', borderLeft: '4px solid #2e7d32', padding: '20px', borderRadius: '4px', marginBottom: '30px' }}>
+            <h3 style={{ marginBottom: '8px', color: '#2e7d32' }}>Payment Status: Successful</h3>
+            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
+              Thank you! Your payment has been received and verified. Your order is now confirmed.
+            </p>
+          </div>
+        ) : (
+          <div style={{ backgroundColor: 'var(--color-beige)', borderLeft: '4px solid var(--color-gold)', padding: '20px', borderRadius: '4px', marginBottom: '30px' }}>
+            <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Payment Approval</h3>
+            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
+              Your order has been recorded successfully. Please coordinate with our support team to verify manual transfers or check status updates.
+            </p>
+          </div>
+        )}
+      </Reveal>
 
       {/* Order Details Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px', border: '1px solid var(--color-border)', borderRadius: '4px', padding: '30px' }} className="fade-in-up">
+      <Reveal style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px', border: '1px solid var(--color-border)', borderRadius: '4px', padding: '30px' }} delay={300}>
         
         {/* Order ID */}
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-border)', paddingBottom: '15px' }}>
@@ -135,19 +138,19 @@ export default async function OrderSuccessPage({ params }) {
           <span>{order.totalAmount}</span>
         </div>
 
-      </div>
+      </Reveal>
 
-      <div style={{ textAlign: 'center', marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+      <Reveal style={{ textAlign: 'center', marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }} delay={450}>
         <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
           <span>Need help with custom measurements or payment verification? </span>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--color-gold)', textDecoration: 'underline', fontWeight: '500' }}>
             Message us on WhatsApp
           </a>
         </div>
-        <Link href="/collections" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        <Link href="/collections" className="btn-outline btn-click-feedback" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
           <ShoppingBag size={16} /> Continue Shopping
         </Link>
-      </div>
+      </Reveal>
 
     </div>
   );

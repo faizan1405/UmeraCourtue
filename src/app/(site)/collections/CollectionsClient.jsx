@@ -3,6 +3,7 @@
 import React, { Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ui/ProductCard';
+import Reveal from '@/components/ui/Reveal';
 
 function CollectionsContent({ products = [], categories = [], initialCategory }) {
   const router = useRouter();
@@ -69,16 +70,16 @@ function CollectionsContent({ products = [], categories = [], initialCategory })
 
   return (
     <div className="container section-padding">
-      <div className="section-header text-center margin-bottom-lg fade-in-up">
+      <Reveal className="section-header text-center margin-bottom-lg">
         <h1>All Collections</h1>
         <p>Explore our full range of luxury couture pieces.</p>
-      </div>
+      </Reveal>
 
       {categories.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '3rem', flexWrap: 'wrap' }}>
           <button
-            className={`btn-outline ${activeCategory === 'all' ? 'btn-primary' : ''}`}
-            style={{ padding: '8px 20px', fontSize: '0.8rem' }}
+            className={`btn-outline ${activeCategory === 'all' ? 'btn-primary' : ''} btn-click-feedback`}
+            style={{ padding: '8px 20px', fontSize: '0.8rem', transition: 'var(--transition-smooth)' }}
             onClick={() => handleCategoryChange('all')}
           >
             All
@@ -86,8 +87,8 @@ function CollectionsContent({ products = [], categories = [], initialCategory })
           {categories.map(cat => (
             <button
               key={cat._id}
-              className={`btn-outline ${activeCategory === cat.slug ? 'btn-primary' : ''}`}
-              style={{ padding: '8px 20px', fontSize: '0.8rem' }}
+              className={`btn-outline ${activeCategory === cat.slug ? 'btn-primary' : ''} btn-click-feedback`}
+              style={{ padding: '8px 20px', fontSize: '0.8rem', transition: 'var(--transition-smooth)' }}
               onClick={() => handleCategoryChange(cat.slug)}
             >
               {cat.name}
@@ -96,16 +97,16 @@ function CollectionsContent({ products = [], categories = [], initialCategory })
         </div>
       )}
       
-      <div className="products-grid fade-in-up" style={{ animationDelay: '0.2s' }}>
-        {filtered.map(product => (
-          <ProductCard key={product._id} product={product} />
+      <div className="products-grid">
+        {filtered.map((product, idx) => (
+          <ProductCard key={product._id} product={product} delay={(idx % 8) * 80} />
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center" style={{ padding: '3rem 0', color: 'var(--color-text-muted)' }}>
+        <Reveal className="text-center" style={{ padding: '3rem 0', color: 'var(--color-text-muted)' }}>
           <p>No products found in this collection.</p>
-        </div>
+        </Reveal>
       )}
     </div>
   );
@@ -118,4 +119,3 @@ export default function CollectionsClient(props) {
     </Suspense>
   );
 }
-

@@ -168,6 +168,12 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06);
 }
 
 .stat-icon {
@@ -263,6 +269,7 @@
   font-size: 0.9rem;
   color: #333;
   vertical-align: middle;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .admin-table tr:hover td {
@@ -290,7 +297,7 @@
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -312,6 +319,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .badge.featured { background: #fff3e0; color: #ef6c00; }
@@ -614,6 +622,7 @@
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(4px);
+  animation: fadeInOverlay 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-content {
@@ -623,6 +632,17 @@
   max-width: 400px;
   width: 90%;
   text-align: center;
+  animation: scaleInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(4px); }
+}
+
+@keyframes scaleInModal {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 .modal-icon {
@@ -894,4 +914,21 @@
 
 .admin-empty p {
   margin-bottom: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  .modal-overlay, .modal-content, .admin-stat-card {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

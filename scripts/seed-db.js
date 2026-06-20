@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const { loadEnvConfig } = require('@next/env');
 loadEnvConfig(path.join(__dirname, '..'));
@@ -86,6 +87,13 @@ const PolicySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Policy = mongoose.models.Policy || mongoose.model('Policy', PolicySchema);
+
+const AdminSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+}, { timestamps: true });
+
+const Admin = mongoose.models.Admin || mongoose.model('Admin', AdminSchema);
 
 async function seed() {
   try {
@@ -313,17 +321,39 @@ async function seed() {
     }
     console.log('Policies seeded successfully.');
 
+    // 5. Seed admin credentials
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (adminEmail && adminPassword) {
+      console.log('Seeding admin credentials...');
+      const hashedPassword = adminPassword.startsWith('$2')
+        ? adminPassword
+        : bcrypt.hashSync(adminPassword, 10);
+
+      await Admin.findOneAndUpdate(
+        { email: adminEmail },
+        { email: adminEmail, password: hashedPassword },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      console.log('Admin credentials seeded successfully.');
+    } else {
+      console.log('Skipping admin seeding (ADMIN_EMAIL or ADMIN_PASSWORD not set in environment).');
+    }
+
     const stats = {
       categories: await Category.countDocuments(),
       products: await Product.countDocuments(),
       settings: await Settings.countDocuments(),
       policies: await Policy.countDocuments(),
+      admins: await Admin.countDocuments(),
     };
     console.log('\n--- Seeding Statistics ---');
     console.log(`Categories: ${stats.categories}`);
     console.log(`Products: ${stats.products}`);
     console.log(`Settings: ${stats.settings}`);
     console.log(`Policies: ${stats.policies}`);
+    console.log(`Admins: ${stats.admins}`);
     console.log('Database seeding completed successfully.\n');
   } catch (error) {
     console.error('Seeding failed with error:', error.message);

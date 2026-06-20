@@ -15,6 +15,28 @@ const Header = () => {
   const { cart, wishlist, isSearchOpen, setIsSearchOpen, mounted } = useShop();
   const { settings } = useSiteData();
 
+  const [animateCart, setAnimateCart] = useState(false);
+  const [animateWishlist, setAnimateWishlist] = useState(false);
+
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const wishlistCount = wishlist.length;
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setAnimateCart(true);
+      const t = setTimeout(() => setAnimateCart(false), 300);
+      return () => clearTimeout(t);
+    }
+  }, [cartCount]);
+
+  useEffect(() => {
+    if (wishlistCount > 0) {
+      setAnimateWishlist(true);
+      const t = setTimeout(() => setAnimateWishlist(false), 300);
+      return () => clearTimeout(t);
+    }
+  }, [wishlistCount]);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setIsSearchOpen(false);
@@ -26,10 +48,6 @@ const Header = () => {
       router.push('/collections');
     }
   };
-
-
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const wishlistCount = wishlist.length;
 
   const whatsappUrl = settings?.whatsapp
     ? `https://wa.me/91${settings.whatsapp}`
@@ -47,14 +65,14 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container header-container">
         
-        <button className="mobile-toggle" onClick={() => setMobileMenuOpen(true)}>
+        <button className="mobile-toggle btn-click-feedback" onClick={() => setMobileMenuOpen(true)}>
           <Menu size={24} />
         </button>
 
         <nav className={`main-nav ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-nav-header">
             <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '60px', width: 'auto' }} />
-            <button className="close-menu" onClick={() => setMobileMenuOpen(false)}>
+            <button className="close-menu btn-click-feedback" onClick={() => setMobileMenuOpen(false)}>
               <X size={24} />
             </button>
           </div>
@@ -67,27 +85,29 @@ const Header = () => {
           </ul>
         </nav>
 
-        {mobileMenuOpen && (
-          <div className="nav-overlay" onClick={() => setMobileMenuOpen(false)}></div>
-        )}
+        <div className={`nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
 
         <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center' }}>
           <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '80px', width: 'auto' }} />
         </Link>
 
         <div className="header-icons">
-          <button className="icon-btn" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+          <button className="icon-btn btn-click-feedback" onClick={() => setIsSearchOpen(!isSearchOpen)}>
             <Search size={20} />
           </button>
-          <Link href="/wishlist" className="icon-btn cart-btn">
+          <Link href="/wishlist" className="icon-btn cart-btn btn-click-feedback">
             <Heart size={20} />
-            {mounted && wishlistCount > 0 && <span className="cart-count">{wishlistCount}</span>}
+            {mounted && wishlistCount > 0 && (
+              <span className={`cart-count ${animateWishlist ? 'badge-pop' : ''}`}>{wishlistCount}</span>
+            )}
           </Link>
-          <Link href="/cart" className="icon-btn cart-btn">
+          <Link href="/cart" className="icon-btn cart-btn btn-click-feedback">
             <ShoppingBag size={20} />
-            {mounted && cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            {mounted && cartCount > 0 && (
+              <span className={`cart-count ${animateCart ? 'badge-pop' : ''}`}>{cartCount}</span>
+            )}
           </Link>
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="whatsapp-btn-header">
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="whatsapp-btn-header btn-click-feedback">
             <Phone size={16} /> Contact
           </a>
         </div>
@@ -104,10 +124,10 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button type="submit" style={{ marginRight: '15px' }} aria-label="Search">
+            <button type="submit" className="btn-click-feedback" style={{ marginRight: '15px' }} aria-label="Search">
               <Search size={24} />
             </button>
-            <button type="button" onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} aria-label="Close search">
+            <button type="button" className="btn-click-feedback" onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} aria-label="Close search">
               <X size={24} />
             </button>
           </form>
