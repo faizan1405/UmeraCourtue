@@ -59,6 +59,7 @@ export default function CheckoutPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [simulatedPayment, setSimulatedPayment] = useState(null);
 
   // Sync payment method option if price on request changes
   useEffect(() => {
@@ -180,6 +181,49 @@ export default function CheckoutPage() {
         throw new Error(rzpData.error || 'Payment gateway order initialization failed');
       }
 
+      // Check if we should simulate payment (using dummy keys)
+      const rzpKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || rzpData.keyId;
+      if (rzpKey === 'rzp_test_DUMMYKEY123') {
+        setLoading(false);
+        setSimulatedPayment({
+          amount: rzpData.amount,
+          orderId: localOrder._id,
+          razorpayOrderId: rzpData.id,
+          handler: async function (response) {
+            setLoading(true);
+            try {
+              // Verify payment signature on backend
+              const verifyResponse = await fetch('/api/payments/razorpay/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  orderId: localOrder._id,
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
+              });
+
+              const verifyData = await verifyResponse.json();
+              if (!verifyResponse.ok) {
+                throw new Error(verifyData.error || 'Payment verification failed');
+              }
+
+              clearCart();
+              router.push(`/order-success/${localOrder._id}`);
+            } catch (err) {
+              setError(err.message || 'Payment verification failed. Please contact WhatsApp support.');
+              setLoading(false);
+            }
+          },
+          ondismiss: function () {
+            setLoading(false);
+            setError('Payment process was closed. Your order details are saved, and you can retry paying.');
+          }
+        });
+        return;
+      }
+
       // 3. Load Razorpay script
       const isScriptLoaded = await loadRazorpayScript();
       if (!isScriptLoaded) {
@@ -188,7 +232,7 @@ export default function CheckoutPage() {
 
       // 4. Open Razorpay checkout pop-up
       const options = {
-        key: rzpData.keyId,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || rzpData.keyId,
         amount: rzpData.amount,
         currency: rzpData.currency,
         name: 'Umera Couture',
@@ -425,6 +469,98 @@ export default function CheckoutPage() {
 
         </div>
       </form>
+
+      {/* Simulated Razorpay Modal */}
+      {simulatedPayment && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+          fontFamily: 'Montserrat, sans-serif'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            padding: '40px',
+            borderRadius: '8px',
+            maxWidth: '450px',
+            width: '90%',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            textAlign: 'center'
+          }}>
+            <div style={{ marginBottom: '20px' }}>
+              <img src="/umera-logo.png" alt="Umera Couture" style={{ height: '50px', marginInline: 'auto' }} />
+            </div>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '10px', color: '#111' }}>Razorpay Payment Gateway</h3>
+            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '20px' }}>Simulated Test Environment</p>
+            
+            <div style={{ backgroundColor: '#f8f8f8', padding: '15px', borderRadius: '4px', marginBottom: '30px', fontSize: '1.05rem', fontWeight: '600' }}>
+              Amount: ₹{(simulatedPayment.amount / 100).toLocaleString('en-IN')}.00
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button 
+                type="button" 
+                onClick={async () => {
+                  const handler = simulatedPayment.handler;
+                  const orderId = simulatedPayment.orderId;
+                  const rzpOrderId = simulatedPayment.razorpayOrderId;
+                  setSimulatedPayment(null);
+                  setLoading(true);
+                  await handler({
+                    razorpay_order_id: rzpOrderId,
+                    razorpay_payment_id: `pay_mock_${Math.random().toString(36).substring(2, 11)}`,
+                    razorpay_signature: 'mock_signature'
+                  });
+                }} 
+                style={{
+                  backgroundColor: '#111111',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '4px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase'
+                }}
+              >
+                Simulate Successful Payment
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => {
+                  const ondismiss = simulatedPayment.ondismiss;
+                  setSimulatedPayment(null);
+                  ondismiss();
+                }} 
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#666',
+                  border: '1px solid #ccc',
+                  padding: '12px',
+                  borderRadius: '4px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase'
+                }}
+              >
+                Simulate Cancel/Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -58,17 +58,30 @@ export default async function OrderSuccessPage({ params }) {
         </p>
       </div>
 
-      {/* Payment Pending Warning */}
-      <div style={{ backgroundColor: 'var(--color-beige)', borderLeft: '4px solid var(--color-gold)', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
-        <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Approval</h3>
-        <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-          Because our items are handcrafted luxury couture and custom orders, we manually review and coordinate payments. 
-          To confirm your payment details and finalize production timing, please click below to send a message directly to our WhatsApp support team.
-        </p>
-        <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginTop: '15px', padding: '12px 24px', fontSize: '0.95rem' }}>
-          <MessageCircle size={18} /> Confirm on WhatsApp
-        </a>
-      </div>
+      {/* Payment Status Info */}
+      {order.paymentStatus === 'paid' ? (
+        <div style={{ backgroundColor: '#f4fbf7', borderLeft: '4px solid #2e7d32', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
+          <h3 style={{ marginBottom: '8px', color: '#2e7d32' }}>Payment Status: Successful</h3>
+          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
+            Thank you! Your payment has been received and verified. Your order is now confirmed. 
+            If you have custom measurement requests or want to coordinate styling details, click below to message us directly on WhatsApp.
+          </p>
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginTop: '15px', padding: '12px 24px', fontSize: '0.95rem', backgroundColor: '#2e7d32', borderColor: '#2e7d32', color: '#fff' }}>
+            <MessageCircle size={18} /> Message on WhatsApp
+          </a>
+        </div>
+      ) : (
+        <div style={{ backgroundColor: 'var(--color-beige)', borderLeft: '4px solid var(--color-gold)', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
+          <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Approval</h3>
+          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
+            Because our items are handcrafted luxury couture and custom orders, we manually review and coordinate payments. 
+            To confirm your payment details and finalize production timing, please click below to send a message directly to our WhatsApp support team.
+          </p>
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginTop: '15px', padding: '12px 24px', fontSize: '0.95rem' }}>
+            <MessageCircle size={18} /> Confirm on WhatsApp
+          </a>
+        </div>
+      )}
 
       {/* Order Details Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px', border: '1px solid var(--color-border)', borderRadius: '4px', padding: '30px' }} className="fade-in-up">

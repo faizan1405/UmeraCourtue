@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
+import mongoose from 'mongoose';
 
 export async function POST(request) {
   try {
@@ -11,9 +12,18 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Missing orderId parameter' }, { status: 400 });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return NextResponse.json({ error: 'Invalid orderId format' }, { status: 400 });
+    }
+
     const order = await Order.findById(orderId);
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    // Check if order is already paid to prevent duplicate processing
+    if (order.paymentStatus === 'paid') {
+      return NextResponse.json({ error: 'This order has already been paid' }, { status: 400 });
     }
 
     // Convert amount to paise. Handle "Price on Request"
@@ -36,23 +46,33 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Razorpay keys not configured on server' }, { status: 500 });
     }
 
-    const authString = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
-    const response = await fetch('https://api.razorpay.com/v1/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${authString}`,
-      },
-      body: JSON.stringify({
+    let data;
+    if (keyId === 'rzp_test_DUMMYKEY123') {
+      // Mock order generation for testing
+      data = {
+        id: `order_mock_${Math.random().toString(36).substring(2, 11)}`,
         amount: amountInPaise,
         currency: 'INR',
-        receipt: orderId.toString(),
-      }),
-    });
+      };
+    } else {
+      const authString = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+      const response = await fetch('https://api.razorpay.com/v1/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${authString}`,
+        },
+        body: JSON.stringify({
+          amount: amountInPaise,
+          currency: 'INR',
+          receipt: orderId.toString(),
+        }),
+      });
 
-    const data = await response.json();
-    if (!response.ok) {
-      return NextResponse.json({ error: data.error?.description || 'Razorpay order creation failed' }, { status: response.status });
+      data = await response.json();
+      if (!response.ok) {
+        return NextResponse.json({ error: data.error?.description || 'Razorpay order creation failed' }, { status: response.status });
+      }
     }
 
     // Update local order with Razorpay Order ID
