@@ -88,8 +88,8 @@ export default function CartClient() {
           <Link href="/collections" className="btn-primary btn-click-feedback">Continue Shopping</Link>
         </Reveal>
       ) : (
-        <Reveal style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px' }} delay={150}>
-          <div style={{ border: '1px solid var(--color-border)', borderRadius: '4px', overflow: 'hidden' }}>
+        <Reveal className="cart-grid-layout" delay={150}>
+          <div className="cart-items-wrapper">
             {cart.map((item) => {
               const itemKey = `${item.id}-${item.size}-${item.color || ''}`;
               const isRemoving = removingKeys.includes(itemKey);
@@ -97,43 +97,31 @@ export default function CartClient() {
               return (
                 <div 
                   key={itemKey} 
-                  style={{ 
-                    display: 'flex', 
-                    padding: isRemoving ? '0px 20px' : '20px', 
-                    borderBottom: isRemoving ? 'none' : '1px solid var(--color-border)', 
-                    gap: '20px',
-                    maxHeight: isRemoving ? '0px' : '300px',
-                    opacity: isRemoving ? 0 : 1,
-                    overflow: 'hidden',
-                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
+                  className={`cart-item-container ${isRemoving ? 'removing' : ''}`}
                 >
-                  <img src={item.image || '/product_1.png'} alt={item.name} style={{ width: '100px', height: '133px', objectFit: 'cover' }} />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <h3 style={{ fontSize: '1.2rem', marginBottom: '5px' }}>{item.name}</h3>
-                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>
+                  <img src={item.image || '/product_1.png'} alt={item.name} className="cart-item-image" />
+                  <div className="cart-item-info">
+                    <h3 className="cart-item-title">{item.name}</h3>
+                    <p className="cart-item-meta">
                       Size: {item.size}{item.color ? ` | Color: ${item.color}` : ''}
                     </p>
-                    <p style={{ fontWeight: '500', marginBottom: '15px' }}>
+                    <p className="cart-item-price">
                       {item.price} {item.quantity > 1 && `(Total: ${getItemLineTotal(item)})`}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--color-border)' }}>
+                    <div className="cart-item-actions">
+                      <div className="cart-qty-selector">
                         <button
-                          className="btn-click-feedback"
-                          style={{ padding: '5px 10px', backgroundColor: 'var(--color-beige)', fontWeight: 'bold' }}
+                          className="cart-qty-btn btn-click-feedback"
                           onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity - 1)}
                         >-</button>
-                        <span style={{ padding: '0 15px' }}>{item.quantity}</span>
+                        <span className="cart-qty-value">{item.quantity}</span>
                         <button
-                          className="btn-click-feedback"
-                          style={{ padding: '5px 10px', backgroundColor: 'var(--color-beige)', fontWeight: 'bold' }}
+                          className="cart-qty-btn btn-click-feedback"
                           onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)}
                         >+</button>
                       </div>
                       <button
-                        className="btn-click-feedback"
-                        style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}
+                        className="cart-remove-btn btn-click-feedback"
                         onClick={() => handleRemoveItem(item.id, item.size, item.color)}
                       >
                         <Trash2 size={16} /> Remove
@@ -144,8 +132,8 @@ export default function CartClient() {
               );
             })}
             
-            <div style={{ padding: '30px', backgroundColor: 'var(--color-beige)', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end', width: '100%', maxWidth: '350px', fontSize: '1rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '15px', marginBottom: '5px' }}>
+            <div className="cart-checkout-block">
+              <div className="cart-summary-totals">
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                   <span style={{ color: 'var(--color-text-muted)' }}>Subtotal</span>
                   <span style={{ fontWeight: '500' }}>{totals.subtotal}</span>

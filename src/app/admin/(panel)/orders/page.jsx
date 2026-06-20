@@ -215,17 +215,8 @@ function OrdersContent() {
       {selectedOrder && (
         <div className="modal-overlay" onClick={closeDetailsModal} style={{ zIndex: 1100 }}>
           <div 
-            className="modal-content" 
-            onClick={(e) => e.stopPropagation()} 
-            style={{ 
-              maxWidth: '750px', 
-              width: '95%', 
-              textAlign: 'left', 
-              padding: '2.5rem', 
-              maxHeight: '90vh', 
-              overflowY: 'auto',
-              position: 'relative'
-            }}
+            className="modal-content admin-order-modal" 
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button 

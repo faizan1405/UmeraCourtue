@@ -241,7 +241,8 @@
 .admin-table-wrap {
   background: #fff;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
@@ -858,7 +859,11 @@
   }
 
   .admin-mobile-toggle {
-    display: block;
+    display: flex;
+    min-height: 44px;
+    min-width: 44px;
+    align-items: center;
+    justify-content: center;
   }
 
   .admin-main {
@@ -877,6 +882,11 @@
     grid-template-columns: 1fr;
   }
 
+  .admin-quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
   .admin-table {
     font-size: 0.8rem;
   }
@@ -888,6 +898,16 @@
 
   .admin-form {
     padding: 1.25rem;
+  }
+
+  .table-btn,
+  .status-select,
+  .admin-select {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
   }
 }
 
@@ -915,6 +935,23 @@
 .admin-empty p {
   margin-bottom: 1rem;
 }
+
+.admin-order-modal {
+  max-width: 750px !important;
+  width: 95% !important;
+  text-align: left !important;
+  padding: 2.5rem !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  position: relative !important;
+}
+
+@media (max-width: 600px) {
+  .admin-order-modal {
+    padding: 1.25rem !important;
+  }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

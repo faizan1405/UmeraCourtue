@@ -79,7 +79,7 @@ export default async function OrderSuccessPage({ params }) {
       </Reveal>
 
       {/* Order Details Grid */}
-      <Reveal style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px', border: '1px solid var(--color-border)', borderRadius: '4px', padding: '30px' }} delay={300}>
+      <Reveal className="success-page-container" delay={300}>
         
         {/* Order ID */}
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-border)', paddingBottom: '15px' }}>
@@ -94,7 +94,7 @@ export default async function OrderSuccessPage({ params }) {
         </div>
 
         {/* Customer & Delivery Summary */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', borderBottom: '1px solid var(--color-border)', paddingBottom: '20px' }}>
+        <div className="success-info-grid">
           <div>
             <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', color: 'var(--color-text-muted)' }}>Shipping To</h4>
             <p style={{ fontWeight: '600' }}>{order.customerName}</p>

@@ -329,46 +329,46 @@ export default function CheckoutClient() {
         </Reveal>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'start' }}>
+      <form onSubmit={handleSubmit}>
+        <div className="checkout-main-grid">
           
           {/* Billing & Shipping Details */}
-          <Reveal style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} delay={100}>
+          <Reveal className="checkout-details-column" delay={100}>
             <h2 style={{ fontSize: '1.5rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px', marginBottom: '10px' }}>Shipping Details</h2>
             
             <div>
               <label style={labelStyle}>Full Name *</label>
-              <input type="text" name="customerName" value={formData.customerName} onChange={handleChange} required style={inputStyle} placeholder="Enter your full name" />
+              <input type="text" name="customerName" value={formData.customerName} onChange={handleChange} required style={inputStyle} placeholder="Enter your full name" autoComplete="name" />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <div className="checkout-form-row">
               <div>
                 <label style={labelStyle}>Phone Number *</label>
-                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={inputStyle} placeholder="Phone number" />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={inputStyle} placeholder="Phone number" autoComplete="tel" />
               </div>
               <div>
                 <label style={labelStyle}>Email Address *</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} placeholder="Email address" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} placeholder="Email address" autoComplete="email" />
               </div>
             </div>
 
             <div>
               <label style={labelStyle}>Full Delivery Address *</label>
-              <input type="text" name="address" value={formData.address} onChange={handleChange} required style={inputStyle} placeholder="Street address, Apartment, Suite, etc." />
+              <input type="text" name="address" value={formData.address} onChange={handleChange} required style={inputStyle} placeholder="Street address, Apartment, Suite, etc." autoComplete="street-address" />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+            <div className="checkout-form-triple">
               <div>
                 <label style={labelStyle}>City *</label>
-                <input type="text" name="city" value={formData.city} onChange={handleChange} required style={inputStyle} placeholder="City" />
+                <input type="text" name="city" value={formData.city} onChange={handleChange} required style={inputStyle} placeholder="City" autoComplete="address-level2" />
               </div>
               <div>
                 <label style={labelStyle}>State *</label>
-                <input type="text" name="state" value={formData.state} onChange={handleChange} required style={inputStyle} placeholder="State" />
+                <input type="text" name="state" value={formData.state} onChange={handleChange} required style={inputStyle} placeholder="State" autoComplete="address-level1" />
               </div>
               <div>
                 <label style={labelStyle}>Pincode *</label>
-                <input type="text" name="pincode" value={formData.pincode} onChange={handleChange} required style={inputStyle} placeholder="Pincode" />
+                <input type="text" name="pincode" value={formData.pincode} onChange={handleChange} required style={inputStyle} placeholder="Pincode" inputMode="numeric" pattern="[0-9]*" maxLength={6} autoComplete="postal-code" />
               </div>
             </div>
 
@@ -396,7 +396,7 @@ export default function CheckoutClient() {
           </Reveal>
 
           {/* Order Summary */}
-          <Reveal style={{ backgroundColor: 'var(--color-beige)', padding: '30px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '20px' }} delay={250}>
+          <Reveal className="checkout-summary-column" delay={250}>
             <h2 style={{ fontSize: '1.5rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>Order Summary</h2>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -463,28 +463,8 @@ export default function CheckoutClient() {
 
       {/* Simulated Razorpay Modal */}
       {simulatedPayment && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 9999,
-          fontFamily: 'Montserrat, sans-serif'
-        }} className="fade-in">
-          <div style={{
-            backgroundColor: '#ffffff',
-            padding: '40px',
-            borderRadius: '8px',
-            maxWidth: '450px',
-            width: '90%',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-            textAlign: 'center'
-          }} className="soft-scale">
+        <div className="simulated-gateway-modal fade-in">
+          <div className="simulated-gateway-content soft-scale">
             <div style={{ marginBottom: '20px' }}>
               <img src="/umera-logo.png" alt="Umera Couture" style={{ height: '50px', marginInline: 'auto' }} />
             </div>
