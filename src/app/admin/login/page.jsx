@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
     <div className="admin-login-page">
       <div className="admin-login-card">
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-          <img src="/umera-logo.jpeg" alt="Umera Couture Logo" style={{ height: '80px', width: 'auto' }} />
+          <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '80px', width: 'auto' }} />
         </div>
         <p className="login-subtitle">Admin Panel</p>
 

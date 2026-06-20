@@ -5,7 +5,7 @@ export const metadata = {
   title: 'Umera Couture | Luxury Fashion',
   description: 'Umera Couture - A celebration of timeless elegance, refined craftsmanship, and modern sophistication.',
   icons: {
-    icon: '/umera-logo.jpeg',
+    icon: '/umera-logo.png',
   },
 };
 
