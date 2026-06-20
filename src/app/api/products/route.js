@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import { verifyAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/products — list products (public)
 export async function GET(request) {
   try {
