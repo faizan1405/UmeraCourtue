@@ -15,7 +15,7 @@ export default function HomeClient({ products, newArrivals, categories, settings
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
-          <img src={s.heroBanner || '/hero_banner.png'} alt="Umera Couture Luxury Fashion" />
+          <img src={s.heroBanner || '/hero_banner.png'} alt="Umera Couture Luxury Fashion" fetchPriority="high" />
           <div className="hero-overlay"></div>
         </div>
         <div className="hero-content fade-in-up">
@@ -43,7 +43,7 @@ export default function HomeClient({ products, newArrivals, categories, settings
           {categories.slice(0, 3).map(cat => (
             <Link key={cat._id} href={`/collections/${cat.slug}`} className="collection-card">
               <div className="collection-image">
-                <img src={cat.bannerImage || '/product_1.png'} alt={cat.name} />
+                <img src={cat.bannerImage || '/product_1.png'} alt={cat.name} loading="lazy" />
               </div>
               <div className="collection-info">
                 <h3>{cat.name}</h3>

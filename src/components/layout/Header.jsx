@@ -43,11 +43,11 @@ const Header = () => {
             </button>
           </div>
           <ul className="nav-list">
-            <li><Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link></li>
-            <li><Link href="/collections" onClick={() => setMobileMenuOpen(false)}>Collections</Link></li>
-            <li><Link href="/collections" onClick={() => setMobileMenuOpen(false)}>New Arrivals</Link></li>
-            <li><Link href="/about" onClick={() => setMobileMenuOpen(false)}>About</Link></li>
-            <li><Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link></li>
+            <li><Link href="/" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Home</Link></li>
+            <li><Link href="/collections" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Collections</Link></li>
+            <li><Link href="/collections" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>New Arrivals</Link></li>
+            <li><Link href="/about" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>About</Link></li>
+            <li><Link href="/contact" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Contact</Link></li>
           </ul>
         </nav>
 

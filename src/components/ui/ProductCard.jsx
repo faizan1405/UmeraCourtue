@@ -34,6 +34,7 @@ const ProductCard = ({ product }) => {
             src={product.images?.[isHovered && product.images.length > 1 ? 1 : 0] || '/product_1.png'}
             alt={product.name}
             className="product-image"
+            loading="lazy"
           />
         </Link>
         
