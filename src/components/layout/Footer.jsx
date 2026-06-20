@@ -15,7 +15,9 @@ const Footer = () => {
         <div className="footer-grid">
           
           <div className="footer-brand">
-            <h3 className="footer-logo">Umera Couture</h3>
+            <div className="footer-logo" style={{ marginBottom: '1rem' }}>
+              <img src="/umera-logo.jpeg" alt="Umera Couture Logo" style={{ height: '60px', width: 'auto' }} />
+            </div>
             <p className="footer-desc">
               A celebration of timeless elegance, refined craftsmanship, and modern sophistication.
             </p>

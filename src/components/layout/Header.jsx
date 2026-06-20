@@ -37,7 +37,7 @@ const Header = () => {
 
         <nav className={`main-nav ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-nav-header">
-            <span className="logo-text">Umera</span>
+            <img src="/umera-logo.jpeg" alt="Umera Couture Logo" style={{ height: '40px', width: 'auto' }} />
             <button className="close-menu" onClick={() => setMobileMenuOpen(false)}>
               <X size={24} />
             </button>
@@ -55,8 +55,8 @@ const Header = () => {
           <div className="nav-overlay" onClick={() => setMobileMenuOpen(false)}></div>
         )}
 
-        <Link href="/" className="logo">
-          Umera Couture
+        <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/umera-logo.jpeg" alt="Umera Couture Logo" style={{ height: '50px', width: 'auto' }} />
         </Link>
 
         <div className="header-icons">

@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "seed": "node scripts/seed-db.js",
+    "test-services": "node scripts/test-services.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

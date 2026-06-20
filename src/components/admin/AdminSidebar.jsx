@@ -47,8 +47,8 @@ export default function AdminSidebar() {
 
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
-          <Link href="/admin" className="admin-logo">
-            <span className="admin-logo-text">Umera</span>
+          <Link href="/admin" className="admin-logo" style={{ gap: '10px' }}>
+            <img src="/umera-logo.jpeg" alt="Umera Couture Logo" style={{ height: '40px', width: 'auto' }} />
             <span className="admin-logo-sub">Admin</span>
           </Link>
           <button className="admin-sidebar-close" onClick={() => setSidebarOpen(false)}>
