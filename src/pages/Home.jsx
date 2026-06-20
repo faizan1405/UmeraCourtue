@@ -49,7 +49,7 @@ const Home = () => {
           <p>Discover the new era of luxury couture pieces crafted for the sophisticated.</p>
           <div className="hero-actions">
             <Link to="/collections" className="btn-primary">Shop Collection</Link>
-            <Link to="/custom-order" className="btn-outline">Book Custom Order</Link>
+            <a href="https://wa.me/917774056979?text=Hi%20Umera%20Couture,%20I'm%20interested%20in%20a%20custom%20order." target="_blank" rel="noreferrer" className="btn-outline">Book Custom Order</a>
           </div>
         </div>
       </section>

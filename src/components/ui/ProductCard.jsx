@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, Eye } from 'lucide-react';
+import { useShop } from '../../context/ShopContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { toggleWishlist, isInWishlist } = useShop();
+  
+  const isWishlisted = isInWishlist(product.id);
 
   const whatsappMessage = encodeURIComponent(`Hi Umera Couture, I would like to inquire about: ${product.name}`);
   const whatsappUrl = `https://wa.me/917774056979?text=${whatsappMessage}`;
@@ -29,13 +32,16 @@ const ProductCard = ({ product }) => {
           className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
           onClick={(e) => {
             e.preventDefault();
-            setIsWishlisted(!isWishlisted);
+            toggleWishlist(product);
           }}
         >
           <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
         </button>
 
         <div className={`product-quick-actions ${isHovered ? 'visible' : ''}`}>
+          <Link to={`/product/${product.id}`} className="quick-action-btn view-details">
+            <Eye size={16} /> View Details
+          </Link>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="quick-action-btn whatsapp">
             <MessageCircle size={16} /> Enquire
           </a>

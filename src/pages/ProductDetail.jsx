@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MessageCircle, Ruler } from 'lucide-react';
+import { MessageCircle, Ruler, ShoppingBag } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [selectedSize, setSelectedSize] = useState('');
+  const { addToCart } = useShop();
 
   // Dummy product for all IDs for now
   const product = {
@@ -75,7 +77,21 @@ const ProductDetail = () => {
           </div>
 
           <div className="actions">
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary whatsapp-order-btn">
+            <button 
+              className="btn-primary whatsapp-order-btn" 
+              style={{ marginBottom: '10px' }}
+              onClick={() => {
+                if (!selectedSize && product.sizes.length > 0) {
+                  alert('Please select a size');
+                  return;
+                }
+                addToCart(product, selectedSize);
+                alert('Added to Bag!');
+              }}
+            >
+              <ShoppingBag size={20} /> Add to Bag
+            </button>
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-outline whatsapp-order-btn">
               <MessageCircle size={20} /> Order via WhatsApp
             </a>
             <p className="delivery-note">For Custom sizes, our team will guide you on measurements via WhatsApp.</p>
