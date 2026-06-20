@@ -24,7 +24,8 @@ export default function ProductDetailClient({ product, settings }) {
   );
   const whatsappUrl = `https://wa.me/91${whatsappNum}?text=${whatsappMessage}`;
 
-  const displayPrice = product.priceOnRequest ? 'Price on Request' : product.price;
+  const isPriceMissing = product.priceOnRequest || !product.price;
+  const displayPrice = isPriceMissing ? 'Price details missing' : product.price;
   const images = product.images?.length > 0 ? product.images : ['/product_1.png', '/product_2.png'];
 
   const productForCart = {
@@ -109,12 +110,12 @@ export default function ProductDetailClient({ product, settings }) {
               className="btn-primary whatsapp-order-btn"
               style={{ 
                 marginBottom: '10px', 
-                opacity: isOutOfStock ? 0.5 : 1, 
-                cursor: isOutOfStock ? 'not-allowed' : 'pointer' 
+                opacity: (isOutOfStock || isPriceMissing) ? 0.5 : 1, 
+                cursor: (isOutOfStock || isPriceMissing) ? 'not-allowed' : 'pointer' 
               }}
-              disabled={isOutOfStock}
+              disabled={isOutOfStock || isPriceMissing}
               onClick={() => {
-                if (isOutOfStock) return;
+                if (isOutOfStock || isPriceMissing) return;
                 if (!selectedSize && product.sizes?.length > 0) {
                   alert('Please select a size');
                   return;
@@ -127,12 +128,9 @@ export default function ProductDetailClient({ product, settings }) {
                 alert('Added to Bag!');
               }}
             >
-              <ShoppingBag size={20} /> {isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
+              <ShoppingBag size={20} /> {isOutOfStock ? 'Out of Stock' : (isPriceMissing ? 'Unavailable for Online Purchase' : 'Add to Bag')}
             </button>
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-outline whatsapp-order-btn">
-              <MessageCircle size={20} /> Order via WhatsApp
-            </a>
-            <p className="delivery-note">For Custom sizes, our team will guide you on measurements via WhatsApp.</p>
+            <p className="delivery-note">For Custom sizes, our team will guide you on measurements after checkout.</p>
           </div>
 
           <div className="product-accordion">

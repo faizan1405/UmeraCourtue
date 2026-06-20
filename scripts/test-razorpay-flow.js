@@ -32,6 +32,11 @@ async function runTests() {
   }
   console.log(`[+] Test Product: "${product.name}", Price: "${product.price}", PriceOnRequest: ${product.priceOnRequest}`);
 
+  const originalPrice = product.price;
+  const originalPriceOnRequest = product.priceOnRequest;
+  console.log('[...] Temporarily setting "The Ivory Gown" price to "₹5,000" and priceOnRequest to false for online checkout test...');
+  await db.collection('products').updateOne({ _id: product._id }, { $set: { price: '₹5,000', priceOnRequest: false } });
+
   const testPayloadManual = {
     customerName: 'Faizan Test Manual',
     phone: '7774056979',
@@ -237,6 +242,11 @@ async function runTests() {
     console.error('\n[-] Execution error during tests:', error.message);
     console.log('    Ensure Next.js development server is running ("npm run dev") before running this test.');
   } finally {
+    if (product) {
+      console.log('Restoring original product pricing for "The Ivory Gown"...');
+      await db.collection('products').updateOne({ _id: product._id }, { $set: { price: originalPrice, priceOnRequest: originalPriceOnRequest } });
+      console.log('[+] Restored successfully.');
+    }
     await mongoose.connection.close();
     console.log('\nDatabase connection closed.');
     console.log('====================================================');

@@ -112,6 +112,11 @@ export default function ProductForm({ productId }) {
           <div className="form-group">
             <label className="field-label">Price</label>
             <input className="admin-input" value={form.price} onChange={(e) => updateField('price', e.target.value)} placeholder="₹5,999 or leave empty" />
+            {(!form.price || form.priceOnRequest) && (
+              <p style={{ color: '#d32f2f', fontSize: '0.82rem', marginTop: '6px', lineHeight: '1.4' }}>
+                ⚠️ Price details missing or Price on Request enabled. This product will be marked as &quot;Unavailable for Online Purchase&quot; on the storefront.
+              </p>
+            )}
           </div>
           <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '24px' }}>
             <button type="button" className={`toggle-switch ${form.priceOnRequest ? 'active' : ''}`} onClick={() => updateField('priceOnRequest', !form.priceOnRequest)} />

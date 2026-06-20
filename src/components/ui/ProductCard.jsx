@@ -49,12 +49,9 @@ const ProductCard = ({ product }) => {
         </button>
 
         <div className={`product-quick-actions ${isHovered ? 'visible' : ''}`}>
-          <Link href={`/product/${productId}`} className="quick-action-btn view-details">
+          <Link href={`/product/${productId}`} className="quick-action-btn view-details" style={{ width: '100%', justifyContent: 'center' }}>
             <Eye size={16} /> View Details
           </Link>
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="quick-action-btn whatsapp">
-            <MessageCircle size={16} /> Enquire
-          </a>
         </div>
       </div>
 
@@ -62,7 +59,7 @@ const ProductCard = ({ product }) => {
         <Link href={`/product/${productId}`} className="product-name">
           {product.name}
         </Link>
-        <p className="product-price">{product.priceOnRequest ? 'Price on Request' : product.price}</p>
+        <p className="product-price">{product.priceOnRequest || !product.price ? 'Price details missing' : product.price}</p>
         <div className="product-sizes">
           {product.sizes?.map(size => (
             <span key={size} className="size-pill">{size}</span>

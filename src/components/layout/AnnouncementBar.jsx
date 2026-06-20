@@ -23,7 +23,7 @@ const AnnouncementBar = () => {
       </div>
       <a href={whatsappUrl} target="_blank" rel="noreferrer" className="announcement-action">
         <Phone size={14} className="icon" />
-        <span>WhatsApp to Order</span>
+        <span>WhatsApp Support</span>
       </a>
     </div>
   );

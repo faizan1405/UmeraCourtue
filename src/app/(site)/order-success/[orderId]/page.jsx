@@ -62,24 +62,16 @@ export default async function OrderSuccessPage({ params }) {
       {order.paymentStatus === 'paid' ? (
         <div style={{ backgroundColor: '#f4fbf7', borderLeft: '4px solid #2e7d32', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
           <h3 style={{ marginBottom: '8px', color: '#2e7d32' }}>Payment Status: Successful</h3>
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-            Thank you! Your payment has been received and verified. Your order is now confirmed. 
-            If you have custom measurement requests or want to coordinate styling details, click below to message us directly on WhatsApp.
+          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
+            Thank you! Your payment has been received and verified. Your order is now confirmed.
           </p>
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginTop: '15px', padding: '12px 24px', fontSize: '0.95rem', backgroundColor: '#2e7d32', borderColor: '#2e7d32', color: '#fff' }}>
-            <MessageCircle size={18} /> Message on WhatsApp
-          </a>
         </div>
       ) : (
         <div style={{ backgroundColor: 'var(--color-beige)', borderLeft: '4px solid var(--color-gold)', padding: '20px', borderRadius: '4px', marginBottom: '30px' }} className="fade-in-up">
-          <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Approval</h3>
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-            Because our items are handcrafted luxury couture and custom orders, we manually review and coordinate payments. 
-            To confirm your payment details and finalize production timing, please click below to send a message directly to our WhatsApp support team.
+          <h3 style={{ marginBottom: '8px', color: 'var(--color-black)' }}>Payment Status: Pending Payment Approval</h3>
+          <p style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: '1.6', margin: 0 }}>
+            Your order has been recorded successfully. Please coordinate with our support team to verify manual transfers or check status updates.
           </p>
-          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginTop: '15px', padding: '12px 24px', fontSize: '0.95rem' }}>
-            <MessageCircle size={18} /> Confirm on WhatsApp
-          </a>
         </div>
       )}
 
@@ -145,7 +137,13 @@ export default async function OrderSuccessPage({ params }) {
 
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+      <div style={{ textAlign: 'center', marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+        <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
+          <span>Need help with custom measurements or payment verification? </span>
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--color-gold)', textDecoration: 'underline', fontWeight: '500' }}>
+            Message us on WhatsApp
+          </a>
+        </div>
         <Link href="/collections" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
           <ShoppingBag size={16} /> Continue Shopping
         </Link>

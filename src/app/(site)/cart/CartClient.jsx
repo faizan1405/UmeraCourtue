@@ -9,49 +9,50 @@ import { Trash2, ShoppingBag } from 'lucide-react';
 export default function CartClient() {
   const { cart, removeFromCart, updateQuantity, mounted } = useShop();
   const { settings } = useSiteData();
-  const [showModal, setShowModal] = useState(false);
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
+  const getCartTotals = () => {
+    let subtotal = 0;
+    let hasPriceOnRequest = false;
 
-  const whatsappNum = settings?.whatsapp || '7774056979';
+    cart.forEach(item => {
+      if (item.price === 'Price on Request' || !item.price || item.price === 'Price details missing') {
+        hasPriceOnRequest = true;
+      } else {
+        const cleanedPrice = parseFloat(item.price.toString().replace(/[^\d.]/g, ''));
+        if (isNaN(cleanedPrice)) {
+          hasPriceOnRequest = true;
+        } else {
+          subtotal += cleanedPrice * item.quantity;
+        }
+      }
+    });
 
-  const handleCheckout = async () => {
-    // Save enquiry to MongoDB before opening WhatsApp
-    try {
-      await fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName,
-          phone: customerPhone,
-          items: cart.map(item => ({
-            productName: item.name,
-            size: item.size,
-            color: item.color || '',
-            quantity: item.quantity,
-          })),
-        }),
-      });
-    } catch (e) {
-      console.error('Failed to save enquiry:', e);
+    if (hasPriceOnRequest) {
+      return {
+        subtotal: 'Price details missing',
+        total: 'Price details missing',
+        isPriceOnRequest: true,
+      };
     }
 
-    let message = `Hi Umera Couture! I'd like to place an order for the following items:\n\n`;
-    if (customerName) message += `Name: ${customerName}\n`;
-    if (customerPhone) message += `Phone: ${customerPhone}\n\n`;
-    cart.forEach((item, index) => {
-      const details = [
-        `Size: ${item.size}`,
-        item.color ? `Color: ${item.color}` : ''
-      ].filter(Boolean).join(', ');
-      message += `${index + 1}. ${item.name}\n   ${details}\n   Quantity: ${item.quantity}\n\n`;
-    });
-    message += `Please let me know the total price and payment details. Thank you!`;
-    
-    const whatsappUrl = `https://wa.me/91${whatsappNum}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    setShowModal(false);
+    return {
+      subtotal: `₹${subtotal.toLocaleString('en-IN')}`,
+      total: `₹${subtotal.toLocaleString('en-IN')}`,
+      isPriceOnRequest: false,
+    };
   };
+
+  const getItemLineTotal = (item) => {
+    if (item.price === 'Price on Request' || !item.price || item.price === 'Price details missing') {
+      return 'Price details missing';
+    }
+    const cleanedPrice = parseFloat(item.price.toString().replace(/[^\d.]/g, ''));
+    if (isNaN(cleanedPrice)) {
+      return 'Price details missing';
+    }
+    return `₹${(cleanedPrice * item.quantity).toLocaleString('en-IN')}`;
+  };
+
+  const totals = getCartTotals();
 
   if (!mounted) {
     return (
@@ -83,7 +84,9 @@ export default function CartClient() {
                   <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>
                     Size: {item.size}{item.color ? ` | Color: ${item.color}` : ''}
                   </p>
-                  <p style={{ fontWeight: '500', marginBottom: '15px' }}>{item.price}</p>
+                  <p style={{ fontWeight: '500', marginBottom: '15px' }}>
+                    {item.price} {item.quantity > 1 && `(Total: ${getItemLineTotal(item)})`}
+                  </p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--color-border)' }}>
                       <button
@@ -108,37 +111,22 @@ export default function CartClient() {
             ))}
             
             <div style={{ padding: '30px', backgroundColor: 'var(--color-beige)', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end', width: '100%', maxWidth: '350px', fontSize: '1rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '15px', marginBottom: '5px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span style={{ color: 'var(--color-text-muted)' }}>Subtotal</span>
+                  <span style={{ fontWeight: '500' }}>{totals.subtotal}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '1.25rem', fontWeight: '600', marginTop: '5px' }}>
+                  <span>Total</span>
+                  <span>{totals.total}</span>
+                </div>
+              </div>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>Shipping & taxes calculated at checkout</p>
               <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <button onClick={() => setShowModal(true)} className="btn-outline" style={{ padding: '14px 30px' }}>
-                  Inquire/Order via WhatsApp
-                </button>
                 <Link href="/checkout" className="btn-primary" style={{ padding: '14px 30px' }}>
                   Proceed to Checkout
                 </Link>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Checkout Modal */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '450px', textAlign: 'left' }}>
-            <h3 className="modal-title" style={{ textAlign: 'center' }}>Complete Your Order</h3>
-            <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '1.5rem', textAlign: 'center' }}>Enter your details before we redirect to WhatsApp</p>
-            <div style={{ marginBottom: '1rem' }}>
-              <label className="field-label">Your Name</label>
-              <input className="admin-input" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter your name" />
-            </div>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label className="field-label">Phone Number</label>
-              <input className="admin-input" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Enter your phone number" />
-            </div>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <button className="btn-outline" style={{ padding: '10px 24px' }} onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="btn-primary" style={{ padding: '10px 24px' }} onClick={handleCheckout}>Send to WhatsApp</button>
             </div>
           </div>
         </div>

@@ -70,7 +70,16 @@ export default function ProductListPage() {
                 <td><img src={p.images?.[0] || '/product_1.png'} alt={p.name} className="table-thumb" /></td>
                 <td><strong>{p.name}</strong></td>
                 <td>{p.category || '—'}</td>
-                <td>{p.priceOnRequest ? 'On Request' : p.price || '—'}</td>
+                <td>
+                  {p.priceOnRequest || !p.price ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ color: '#888', textDecoration: 'line-through', fontSize: '0.85rem' }}>On Request</span>
+                      <span style={{ color: '#d32f2f', fontSize: '0.75rem', fontWeight: '600' }}>⚠️ Price must be added before sale</span>
+                    </div>
+                  ) : (
+                    p.price
+                  )}
+                </td>
                 <td>
                   {p.isFeatured && <span className="badge featured">Featured</span>}{' '}
                   {p.isNewArrival && <span className="badge new-arrival">New</span>}{' '}

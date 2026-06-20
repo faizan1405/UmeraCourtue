@@ -57,20 +57,14 @@ export async function POST(request) {
       });
     }
 
-    let finalSubtotal = '';
-    let finalTotalAmount = '';
-    let finalPaymentMethod = body.paymentMethod || 'manual';
-    let finalPaymentProvider = body.paymentProvider || 'manual';
-
     if (containsPriceOnRequest) {
-      finalSubtotal = 'Price on Request';
-      finalTotalAmount = 'Price on Request';
-      finalPaymentMethod = 'manual';
-      finalPaymentProvider = 'manual';
-    } else {
-      finalSubtotal = `₹${calculatedTotal.toLocaleString('en-IN')}`;
-      finalTotalAmount = `₹${calculatedTotal.toLocaleString('en-IN')}`;
+      return NextResponse.json({ error: 'Cannot check out with items missing a price. Please contact support.' }, { status: 400 });
     }
+
+    const finalSubtotal = `₹${calculatedTotal.toLocaleString('en-IN')}`;
+    const finalTotalAmount = `₹${calculatedTotal.toLocaleString('en-IN')}`;
+    const finalPaymentMethod = body.paymentMethod || 'online';
+    const finalPaymentProvider = body.paymentProvider || 'razorpay';
 
     const order = await Order.create({
       customerName,

@@ -55,18 +55,11 @@ export default function CheckoutClient() {
 
   const totals = getCartTotals();
   const isPriceOnRequest = totals.isPriceOnRequest;
-  const [paymentMethod, setPaymentMethod] = useState(isPriceOnRequest ? 'manual' : 'online');
+  const paymentMethod = 'online';
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [simulatedPayment, setSimulatedPayment] = useState(null);
-
-  // Sync payment method option if price on request changes
-  useEffect(() => {
-    if (isPriceOnRequest) {
-      setPaymentMethod('manual');
-    }
-  }, [isPriceOnRequest]);
 
   // Handle server-side mount check
   if (!mounted) {
@@ -112,6 +105,11 @@ export default function CheckoutClient() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (isPriceOnRequest) {
+      setError('Your bag contains items that are unavailable for online checkout. Please remove them to proceed.');
+      return;
+    }
 
     const { customerName, phone, email, address, city, state, pincode } = formData;
     if (!customerName || !phone || !email || !address || !city || !state || !pincode) {
@@ -379,47 +377,17 @@ export default function CheckoutClient() {
             {/* Payment Method Selector */}
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--color-border)', paddingTop: '20px' }}>
               <h2 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Payment Method</h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: isPriceOnRequest ? 'not-allowed' : 'pointer', opacity: isPriceOnRequest ? 0.5 : 1 }}>
-                  <input 
-                    type="radio" 
-                    name="paymentMethod" 
-                    value="online" 
-                    checked={paymentMethod === 'online'} 
-                    onChange={() => !isPriceOnRequest && setPaymentMethod('online')}
-                    disabled={isPriceOnRequest}
-                  />
-                  <div>
-                    <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>Pay Online</span>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                      UPI, Credit/Debit Cards, Netbanking (Razorpay)
-                    </p>
-                  </div>
-                </label>
-
-                {isPriceOnRequest && (
-                  <p style={{ fontSize: '0.8rem', color: '#c62828', margin: '0' }}>
-                    * Online payment is not available for &quot;Price on Request&quot; items.
+              <div style={{ padding: '15px', border: '1px solid var(--color-border)', borderRadius: '4px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>Pay Online</span>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '4px', marginBottom: '0' }}>
+                    UPI, Credit/Debit Cards, Netbanking (Razorpay Secure Checkout)
                   </p>
-                )}
-
-                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                  <input 
-                    type="radio" 
-                    name="paymentMethod" 
-                    value="manual" 
-                    checked={paymentMethod === 'manual'} 
-                    onChange={() => setPaymentMethod('manual')}
-                  />
-                  <div>
-                    <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>WhatsApp / Bank Transfer</span>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                      Coordinate payment manually over WhatsApp to finalize order confirmation.
-                    </p>
-                  </div>
-                </label>
+                </div>
               </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '15px' }}>
+                Having trouble paying online? Please contact support at the top header or message us directly on WhatsApp.
+              </p>
             </div>
 
           </div>
@@ -457,13 +425,8 @@ export default function CheckoutClient() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '10px' }}>
-              {loading 
-                ? 'Processing...' 
-                : paymentMethod === 'online' 
-                  ? 'Pay & Place Order' 
-                  : 'Place Order via WhatsApp'
-              }
+            <button type="submit" disabled={loading || isPriceOnRequest} className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '10px', opacity: isPriceOnRequest ? 0.5 : 1, cursor: isPriceOnRequest ? 'not-allowed' : 'pointer' }}>
+              {loading ? 'Processing...' : 'Pay & Place Order'}
             </button>
           </div>
 
