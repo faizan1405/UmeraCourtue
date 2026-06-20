@@ -1,9 +1,14 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import './Footer.css';
+import { useSiteData } from '@/context/SiteDataContext';
 
 const Footer = () => {
+  const { settings } = useSiteData();
+  const s = settings || {};
+
   return (
     <footer className="footer section-padding">
       <div className="container">
@@ -15,7 +20,7 @@ const Footer = () => {
               A celebration of timeless elegance, refined craftsmanship, and modern sophistication.
             </p>
             <div className="social-links">
-              <a href="#" className="social-link">IG</a>
+              {s.instagram && <a href={s.instagram} target="_blank" rel="noreferrer" className="social-link">IG</a>}
               <a href="#" className="social-link">FB</a>
             </div>
           </div>
@@ -23,13 +28,12 @@ const Footer = () => {
           <div className="footer-links">
             <h4>Quick Links</h4>
             <ul>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/size-guide">Size Guide</Link></li>
-              <li><Link to="/shipping">Shipping</Link></li>
-              <li><Link to="/returns">Returns</Link></li>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/terms">Terms & Conditions</Link></li>
+              <li><Link href="/about">About Us</Link></li>
+              <li><Link href="/contact">Contact</Link></li>
+              <li><Link href="/size-guide">Size Guide</Link></li>
+              <li><Link href="/shipping-returns">Shipping & Returns</Link></li>
+              <li><Link href="/privacy-policy">Privacy Policy</Link></li>
+              <li><Link href="/terms">Terms & Conditions</Link></li>
             </ul>
           </div>
 
@@ -38,19 +42,19 @@ const Footer = () => {
             <ul>
               <li>
                 <Phone size={16} className="contact-icon" />
-                <a href="tel:7774056979">+91 7774056979</a>
+                <a href={`tel:+91${s.phone || '7774056979'}`}>+91 {s.phone || '7774056979'}</a>
               </li>
               <li>
                 <Phone size={16} className="contact-icon" />
-                <a href="https://wa.me/917774056979" target="_blank" rel="noreferrer">WhatsApp: +91 7774056979</a>
+                <a href={`https://wa.me/91${s.whatsapp || '7774056979'}`} target="_blank" rel="noreferrer">WhatsApp: +91 {s.whatsapp || '7774056979'}</a>
               </li>
               <li>
                 <Mail size={16} className="contact-icon" />
-                <a href="mailto:umeracouture@gmail.com">umeracouture@gmail.com</a>
+                <a href={`mailto:${s.email || 'umeracouture@gmail.com'}`}>{s.email || 'umeracouture@gmail.com'}</a>
               </li>
               <li className="address">
                 <MapPin size={16} className="contact-icon map-icon" />
-                <span>402, 5th Floor, Charyana Heights, Beside Italian Bakery, Raikhad, Ahmedabad, Gujarat - 380001</span>
+                <span>{s.address || '402, 5th Floor, Charyana Heights, Beside Italian Bakery, Raikhad, Ahmedabad, Gujarat - 380001'}</span>
               </li>
             </ul>
           </div>

@@ -1,16 +1,27 @@
+'use client';
+
 import React from 'react';
 import { Phone } from 'lucide-react';
-import './AnnouncementBar.css';
+import { useSiteData } from '@/context/SiteDataContext';
 
 const AnnouncementBar = () => {
+  const { settings } = useSiteData();
+  const s = settings || {};
+  const whatsappUrl = `https://wa.me/91${s.whatsapp || '7774056979'}`;
+  const announcementParts = (s.announcementText || 'Luxury Couture Pieces | Custom Orders Available').split('|');
+
   return (
     <div className="announcement-bar">
       <div className="announcement-text">
-        <span>Luxury Couture Pieces</span>
-        <span className="separator">|</span>
-        <span>Custom Orders Available</span>
+        <span>{announcementParts[0]?.trim()}</span>
+        {announcementParts[1] && (
+          <>
+            <span className="separator">|</span>
+            <span>{announcementParts[1].trim()}</span>
+          </>
+        )}
       </div>
-      <a href="https://wa.me/917774056979" target="_blank" rel="noreferrer" className="announcement-action">
+      <a href={whatsappUrl} target="_blank" rel="noreferrer" className="announcement-action">
         <Phone size={14} className="icon" />
         <span>WhatsApp to Order</span>
       </a>

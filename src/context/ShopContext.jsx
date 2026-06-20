@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ShopContext = createContext();
@@ -8,31 +10,33 @@ export const ShopProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Load from local storage
+  // Load from local storage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('umera_cart');
     const savedWishlist = localStorage.getItem('umera_wishlist');
     if (savedCart) setCart(JSON.parse(savedCart));
     if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
+    setMounted(true);
   }, []);
 
   // Save to local storage
   useEffect(() => {
-    localStorage.setItem('umera_cart', JSON.stringify(cart));
-  }, [cart]);
+    if (mounted) localStorage.setItem('umera_cart', JSON.stringify(cart));
+  }, [cart, mounted]);
 
   useEffect(() => {
-    localStorage.setItem('umera_wishlist', JSON.stringify(wishlist));
-  }, [wishlist]);
+    if (mounted) localStorage.setItem('umera_wishlist', JSON.stringify(wishlist));
+  }, [wishlist, mounted]);
 
   const addToCart = (product, size) => {
     setCart(prev => {
       const existingItem = prev.find(item => item.id === product.id && item.size === size);
       if (existingItem) {
-        return prev.map(item => 
-          item.id === product.id && item.size === size 
-            ? { ...item, quantity: item.quantity + 1 } 
+        return prev.map(item =>
+          item.id === product.id && item.size === size
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
@@ -46,9 +50,9 @@ export const ShopProvider = ({ children }) => {
 
   const updateQuantity = (id, size, quantity) => {
     if (quantity < 1) return;
-    setCart(prev => prev.map(item => 
-      item.id === id && item.size === size 
-        ? { ...item, quantity } 
+    setCart(prev => prev.map(item =>
+      item.id === id && item.size === size
+        ? { ...item, quantity }
         : item
     ));
   };
@@ -76,7 +80,8 @@ export const ShopProvider = ({ children }) => {
       removeFromCart,
       updateQuantity,
       toggleWishlist,
-      isInWishlist
+      isInWishlist,
+      mounted,
     }}>
       {children}
     </ShopContext.Provider>
