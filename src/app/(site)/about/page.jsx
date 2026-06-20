@@ -1,5 +1,14 @@
 import { getSettings } from '@/lib/data';
 
+export const metadata = {
+  title: 'Our Story | Umera Couture',
+  description: 'Learn about the heritage, dedication, and modern craftsmanship that defines Umera Couture.',
+  openGraph: {
+    title: 'Our Story | Umera Couture',
+    description: 'Learn about the heritage, dedication, and modern craftsmanship that defines Umera Couture.',
+  },
+};
+
 export default async function AboutPage() {
   const settings = await getSettings();
   const s = settings || {};

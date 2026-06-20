@@ -1,5 +1,10 @@
 import { getPolicy } from '@/lib/data';
 
+export const metadata = {
+  title: 'Shipping & Returns | Umera Couture',
+  description: 'Learn about our premium shipping timelines, custom couture dispatch times, and ready-to-wear returns policy.',
+};
+
 export default async function ShippingReturnsPage() {
   const policy = await getPolicy('shipping');
   return (

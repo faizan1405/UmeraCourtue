@@ -1,6 +1,15 @@
 import { getSettings } from '@/lib/data';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
+export const metadata = {
+  title: 'Contact Us | Umera Couture',
+  description: 'Get in touch with Umera Couture for inquiries, orders, custom sizing consultation, and customer support.',
+  openGraph: {
+    title: 'Contact Us | Umera Couture',
+    description: 'Get in touch with Umera Couture for inquiries, orders, custom sizing consultation, and customer support.',
+  },
+};
+
 export default async function ContactPage() {
   const settings = await getSettings();
   const s = settings || {};

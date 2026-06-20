@@ -1,5 +1,10 @@
 import { getPolicy } from '@/lib/data';
 
+export const metadata = {
+  title: 'Terms & Conditions | Umera Couture',
+  description: 'Review our terms of use, details on custom order advances, cancellation policies, and handcraft product variances.',
+};
+
 export default async function TermsPage() {
   const policy = await getPolicy('terms');
   return (

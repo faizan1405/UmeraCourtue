@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import Category from '@/models/Category';
@@ -5,54 +6,54 @@ import Settings from '@/models/Settings';
 import Policy from '@/models/Policy';
 import Enquiry from '@/models/Enquiry';
 
-export async function getProducts(filters = {}) {
+export const getProducts = cache(async function getProducts(filters = {}) {
   await connectDB();
   const query = { isVisible: true, ...filters };
   return Product.find(query).sort({ sortOrder: 1, createdAt: -1 }).lean();
-}
+});
 
-export async function getAllProducts() {
+export const getAllProducts = cache(async function getAllProducts() {
   await connectDB();
   return Product.find({}).sort({ sortOrder: 1, createdAt: -1 }).lean();
-}
+});
 
-export async function getProduct(id) {
+export const getProduct = cache(async function getProduct(id) {
   await connectDB();
   return Product.findById(id).lean();
-}
+});
 
-export async function getProductBySlug(slug) {
+export const getProductBySlug = cache(async function getProductBySlug(slug) {
   await connectDB();
   return Product.findOne({ slug, isVisible: true }).lean();
-}
+});
 
-export async function getFeaturedProducts() {
+export const getFeaturedProducts = cache(async function getFeaturedProducts() {
   await connectDB();
   return Product.find({ isFeatured: true, isVisible: true }).sort({ sortOrder: 1 }).lean();
-}
+});
 
-export async function getNewArrivals() {
+export const getNewArrivals = cache(async function getNewArrivals() {
   await connectDB();
   return Product.find({ isNewArrival: true, isVisible: true }).sort({ createdAt: -1 }).lean();
-}
+});
 
-export async function getCategories(visibleOnly = true) {
+export const getCategories = cache(async function getCategories(visibleOnly = true) {
   await connectDB();
   const query = visibleOnly ? { isVisible: true } : {};
   return Category.find(query).sort({ sortOrder: 1 }).lean();
-}
+});
 
-export async function getCategory(id) {
+export const getCategory = cache(async function getCategory(id) {
   await connectDB();
   return Category.findById(id).lean();
-}
+});
 
-export async function getCategoryBySlug(slug) {
+export const getCategoryBySlug = cache(async function getCategoryBySlug(slug) {
   await connectDB();
   return Category.findOne({ slug }).lean();
-}
+});
 
-export async function getSettings() {
+export const getSettings = cache(async function getSettings() {
   await connectDB();
   let settings = await Settings.findOne({}).lean();
   if (!settings) {
@@ -77,17 +78,17 @@ export async function getSettings() {
     };
   }
   return JSON.parse(JSON.stringify(settings));
-}
+});
 
-export async function getPolicies() {
+export const getPolicies = cache(async function getPolicies() {
   await connectDB();
   return Policy.find({}).lean();
-}
+});
 
-export async function getPolicy(type) {
+export const getPolicy = cache(async function getPolicy(type) {
   await connectDB();
   return Policy.findOne({ type }).lean();
-}
+});
 
 export async function getEnquiryCount() {
   await connectDB();
@@ -108,3 +109,4 @@ export async function getCategoryCount() {
   await connectDB();
   return Category.countDocuments({});
 }
+

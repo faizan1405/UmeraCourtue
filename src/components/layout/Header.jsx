@@ -12,7 +12,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { cart, wishlist, isSearchOpen, setIsSearchOpen } = useShop();
+  const { cart, wishlist, isSearchOpen, setIsSearchOpen, mounted } = useShop();
   const { settings } = useSiteData();
 
   const handleSearchSubmit = (e) => {
@@ -81,11 +81,11 @@ const Header = () => {
           </button>
           <Link href="/wishlist" className="icon-btn cart-btn">
             <Heart size={20} />
-            {wishlistCount > 0 && <span className="cart-count">{wishlistCount}</span>}
+            {mounted && wishlistCount > 0 && <span className="cart-count">{wishlistCount}</span>}
           </Link>
           <Link href="/cart" className="icon-btn cart-btn">
             <ShoppingBag size={20} />
-            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            {mounted && cartCount > 0 && <span className="cart-count">{cartCount}</span>}
           </Link>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="whatsapp-btn-header">
             <Phone size={16} /> Contact

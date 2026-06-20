@@ -1,6 +1,15 @@
 import { getNewArrivals } from '@/lib/data';
 import ProductCard from '@/components/ui/ProductCard';
 
+export const metadata = {
+  title: 'New Arrivals | Umera Couture',
+  description: 'Explore the latest luxury couture additions to our collection. Crafted for sophistication.',
+  openGraph: {
+    title: 'New Arrivals | Umera Couture',
+    description: 'Explore the latest luxury couture additions to our collection. Crafted for sophistication.',
+  },
+};
+
 export default async function NewArrivalsPage() {
   const products = await getNewArrivals();
 

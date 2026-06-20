@@ -1,5 +1,10 @@
 import { getPolicy } from '@/lib/data';
 
+export const metadata = {
+  title: 'Privacy Policy | Umera Couture',
+  description: 'Read our Privacy Policy to understand how we collect, use, and safeguard your details.',
+};
+
 export default async function PrivacyPolicyPage() {
   const policy = await getPolicy('privacy');
   return (

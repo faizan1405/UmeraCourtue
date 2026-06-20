@@ -1,5 +1,10 @@
 import { getPolicy } from '@/lib/data';
 
+export const metadata = {
+  title: 'Size Guide | Umera Couture',
+  description: 'View the size chart measurements for ready-to-wear garments and guide for custom-tailored orders.',
+};
+
 export default async function SizeGuidePage() {
   const policy = await getPolicy('sizeGuide');
 
