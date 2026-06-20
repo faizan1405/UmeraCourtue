@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Brand Colors */
+  --color-ivory: #fffff0;
+  --color-beige: #f5f5dc;
+  --color-champagne: #f7e7ce;
+  --color-blush: #de5d83;
+  --color-black: #111111;
+  --color-gold: #d4af37;
+  
+  /* UI Colors */
+  --color-background: var(--color-ivory);
+  --color-surface: #ffffff;
+  --color-text: var(--color-black);
+  --color-text-muted: #555555;
+  --color-border: #e6e6e6;
+
+  /* Typography */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Montserrat', sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 4rem;
+  --spacing-2xl: 8rem;
+
+  /* Misc */
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-black);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+a:hover {
+  color: var(--color-gold);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: var(--transition-smooth);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Utility Classes */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+}
+
+.text-center { text-align: center; }
+.section-padding { padding: var(--spacing-2xl) 0; }
+.margin-bottom-lg { margin-bottom: var(--spacing-lg); }
+
+/* Buttons */
+.btn-primary {
+  display: inline-block;
+  background-color: var(--color-black);
+  color: #fff;
+  padding: 14px 32px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--color-black);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-black);
+}
+
+.btn-outline {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--color-black);
+  padding: 14px 32px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--color-black);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-black);
+  color: #fff;
+}
+
+/* Micro Animations */
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.image-zoom-container {
+  overflow: hidden;
+}
+
+.image-zoom-container img {
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.image-zoom-container:hover img {
+  transform: scale(1.05);
+}
