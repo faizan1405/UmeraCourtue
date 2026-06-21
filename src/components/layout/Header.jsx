@@ -88,8 +88,6 @@ const Header = () => {
           </nav>
         </div>
 
-        <div className={`nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
-
         {/* CENTER COLUMN: Logo */}
         <div className="header-center">
           <Link href="/" className="logo-container" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>
@@ -121,6 +119,8 @@ const Header = () => {
         </div>
         
       </div>
+
+      <div className={`nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
 
       {isSearchOpen && (
         <div className="search-overlay">

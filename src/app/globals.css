@@ -305,7 +305,6 @@ img {
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: -80px;
   overflow: hidden;
 }
 
@@ -801,18 +800,17 @@ img {
 .header {
   position: sticky;
   top: 0;
-  background-color: transparent;
+  background-color: var(--color-ivory);
   width: 100%;
   z-index: 90;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
-  padding: 1rem 0;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .header.scrolled {
   background-color: rgba(255, 255, 240, 0.95);
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-sm);
-  padding: 0.5rem 0;
+  box-shadow: var(--shadow-md);
 }
 
 .header-container {
@@ -868,6 +866,7 @@ img {
 .nav-list {
   display: flex;
   gap: var(--spacing-lg);
+  align-items: center;
 }
 
 .nav-list a {
