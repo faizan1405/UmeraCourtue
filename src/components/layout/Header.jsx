@@ -65,50 +65,58 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container header-container">
         
-        <button className="mobile-toggle btn-click-feedback" onClick={() => setMobileMenuOpen(true)}>
-          <Menu size={24} />
-        </button>
+        {/* LEFT COLUMN: Menu/Nav */}
+        <div className="header-left">
+          <button className="mobile-toggle btn-click-feedback" onClick={() => setMobileMenuOpen(true)}>
+            <Menu size={24} />
+          </button>
 
-        <nav className={`main-nav ${mobileMenuOpen ? 'open' : ''}`}>
-          <div className="mobile-nav-header">
-            <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '60px', width: 'auto' }} />
-            <button className="close-menu btn-click-feedback" onClick={() => setMobileMenuOpen(false)}>
-              <X size={24} />
-            </button>
-          </div>
-          <ul className="nav-list">
-            <li><Link href="/" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Home</Link></li>
-            <li><Link href="/collections" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Collections</Link></li>
-            <li><Link href="/new-arrivals" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>New Arrivals</Link></li>
-            <li><Link href="/about" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>About</Link></li>
-            <li><Link href="/contact" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Contact</Link></li>
-          </ul>
-        </nav>
+          <nav className={`main-nav ${mobileMenuOpen ? 'open' : ''}`}>
+            <div className="mobile-nav-header">
+              <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '50px', width: 'auto' }} />
+              <button className="close-menu btn-click-feedback" onClick={() => setMobileMenuOpen(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            <ul className="nav-list">
+              <li><Link href="/" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Home</Link></li>
+              <li><Link href="/collections" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Collections</Link></li>
+              <li><Link href="/new-arrivals" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>New Arrivals</Link></li>
+              <li><Link href="/about" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>About</Link></li>
+              <li><Link href="/contact" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Contact</Link></li>
+            </ul>
+          </nav>
+        </div>
 
         <div className={`nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
 
-        <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '80px', width: 'auto' }} />
-        </Link>
+        {/* CENTER COLUMN: Logo */}
+        <div className="header-center">
+          <Link href="/" className="logo-container" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>
+            <img src="/umera-logo.png" alt="Umera Couture Logo" className="logo-img" />
+          </Link>
+        </div>
 
-        <div className="header-icons">
+        {/* RIGHT COLUMN: Actions */}
+        <div className="header-right">
           <button className="icon-btn btn-click-feedback" onClick={() => setIsSearchOpen(!isSearchOpen)}>
-            <Search size={20} />
+            <Search size={22} />
           </button>
           <Link href="/wishlist" className="icon-btn cart-btn btn-click-feedback">
-            <Heart size={20} />
+            <Heart size={22} />
             {mounted && wishlistCount > 0 && (
               <span className={`cart-count ${animateWishlist ? 'badge-pop' : ''}`}>{wishlistCount}</span>
             )}
           </Link>
           <Link href="/cart" className="icon-btn cart-btn btn-click-feedback">
-            <ShoppingBag size={20} />
+            <ShoppingBag size={22} />
             {mounted && cartCount > 0 && (
               <span className={`cart-count ${animateCart ? 'badge-pop' : ''}`}>{cartCount}</span>
             )}
           </Link>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="whatsapp-btn-header btn-click-feedback">
-            <Phone size={16} /> Contact
+            <Phone size={18} className="whatsapp-icon" />
+            <span className="whatsapp-text">Contact</span>
           </a>
         </div>
         
