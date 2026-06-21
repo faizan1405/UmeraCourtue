@@ -82,8 +82,8 @@ const Header = () => {
               <li><Link href="/" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Home</Link></li>
               <li><Link href="/collections" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Collections</Link></li>
               <li><Link href="/new-arrivals" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>New Arrivals</Link></li>
-              <li><Link href="/about" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>About</Link></li>
-              <li><Link href="/contact" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Contact</Link></li>
+              <li className="mobile-only-nav-item"><Link href="/about" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>About</Link></li>
+              <li className="mobile-only-nav-item"><Link href="/contact" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>Contact</Link></li>
             </ul>
           </nav>
         </div>
@@ -95,8 +95,12 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* RIGHT COLUMN: Actions */}
+        {/* RIGHT COLUMN: Actions & Right Nav */}
         <div className="header-right">
+          <div className="desktop-nav-right">
+            <Link href="/about">About</Link>
+            <Link href="/contact">Contact</Link>
+          </div>
           <button className="icon-btn btn-click-feedback" onClick={() => setIsSearchOpen(!isSearchOpen)}>
             <Search size={22} />
           </button>
