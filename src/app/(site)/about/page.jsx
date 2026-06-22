@@ -39,13 +39,20 @@ export default async function AboutPage() {
         boxShadow: 'var(--shadow-sm)',
         textAlign: 'center'
       }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Our Philosophy</h2>
+        <h2 style={{ 
+          fontSize: 'clamp(2rem, 5vw, 2.5rem)', 
+          marginBottom: 'var(--spacing-md)',
+          fontWeight: 400,
+          letterSpacing: '0.02em'
+        }}>Our Philosophy</h2>
         <p style={{ 
-          fontSize: '1.5rem', 
-          fontFamily: 'var(--font-heading)', 
+          fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', 
+          fontFamily: 'var(--font-body)', 
           fontStyle: 'italic', 
           color: 'var(--color-text)', 
-          lineHeight: '1.8' 
+          lineHeight: '1.8',
+          letterSpacing: '0.02em',
+          fontWeight: 400
         }}>
           {s.aboutText || '"Umera Couture is a celebration of timeless elegance and modern sophistication. We believe in creating thoughtfully designed pieces that blend luxury with individuality, ensuring every outfit inspires confidence, grace, and effortless style."'}
         </p>
