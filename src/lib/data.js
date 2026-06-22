@@ -6,10 +6,12 @@ import Settings from '@/models/Settings';
 import Policy from '@/models/Policy';
 import Enquiry from '@/models/Enquiry';
 
+const PRODUCT_LIST_FIELDS = '_id name slug price priceOnRequest images category sizes colors isFeatured isNewArrival isVisible shortDescription sortOrder createdAt stockStatus tags fullDescription fabricDetails whatsappMessage careInstructions';
+
 export const getProducts = cache(async function getProducts(filters = {}) {
   await connectDB();
   const query = { isVisible: true, ...filters };
-  return Product.find(query).sort({ sortOrder: 1, createdAt: -1 }).lean();
+  return Product.find(query).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1, createdAt: -1 }).lean();
 });
 
 export const getAllProducts = cache(async function getAllProducts() {
@@ -29,12 +31,12 @@ export const getProductBySlug = cache(async function getProductBySlug(slug) {
 
 export const getFeaturedProducts = cache(async function getFeaturedProducts() {
   await connectDB();
-  return Product.find({ isFeatured: true, isVisible: true }).sort({ sortOrder: 1 }).lean();
+  return Product.find({ isFeatured: true, isVisible: true }).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1 }).lean();
 });
 
 export const getNewArrivals = cache(async function getNewArrivals() {
   await connectDB();
-  return Product.find({ isNewArrival: true, isVisible: true }).sort({ createdAt: -1 }).lean();
+  return Product.find({ isNewArrival: true, isVisible: true }).select(PRODUCT_LIST_FIELDS).sort({ createdAt: -1 }).lean();
 });
 
 export const getCategories = cache(async function getCategories(visibleOnly = true) {

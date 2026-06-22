@@ -47,8 +47,6 @@ export default async function CollectionBySlugPage({ params }) {
     getProducts({ category: slug }),
     getCategories(),
   ]);
-  const category = await getCategoryBySlug(slug);
-
   return <CollectionsClient
     products={JSON.parse(JSON.stringify(products))}
     categories={JSON.parse(JSON.stringify(categories))}
