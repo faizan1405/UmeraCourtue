@@ -50,8 +50,9 @@ async function testLive() {
   try {
     const res = await fetch(`${liveUrl}/api/products`);
     const data = await res.json();
-    if (res.status === 200 && Array.isArray(data.data)) {
-      console.log(`[+] MongoDB live (fetch products): PASS (${data.data.length} products)`);
+    const productsArray = Array.isArray(data) ? data : (data && Array.isArray(data.data) ? data.data : null);
+    if (res.status === 200 && productsArray) {
+      console.log(`[+] MongoDB live (fetch products): PASS (${productsArray.length} products)`);
       mongoLive = true;
     } else {
       console.log(`[-] MongoDB live: FAIL (${res.status})`);

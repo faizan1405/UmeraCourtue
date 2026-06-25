@@ -4,8 +4,7 @@ const { loadEnvConfig } = require('@next/env');
 
 loadEnvConfig(path.join(__dirname, '..'));
 
-const PORT = process.env.PORT || 3000;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || `http://localhost:${process.env.PORT || 3000}`;
 
 async function runTests() {
   console.log('====================================================');

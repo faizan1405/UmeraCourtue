@@ -10,9 +10,16 @@ import Enquiry from '@/models/Enquiry';
 const PRODUCT_LIST_FIELDS = '_id name slug price priceOnRequest images category sizes colors isFeatured isNewArrival isVisible shortDescription sortOrder createdAt stockStatus tags fullDescription fabricDetails whatsappMessage careInstructions';
 
 export const getProducts = cache(async function getProducts(filters = {}) {
-  await connectDB();
-  const query = { isVisible: true, ...filters };
-  return Product.find(query).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1, createdAt: -1 }).lean();
+  const filterKey = JSON.stringify(filters);
+  return unstable_cache(
+    async () => {
+      await connectDB();
+      const query = { isVisible: true, ...filters };
+      return Product.find(query).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1, createdAt: -1 }).lean();
+    },
+    [`products-list-${filterKey}`],
+    { revalidate: 60, tags: ['products'] }
+  )();
 });
 
 export const getAllProducts = unstable_cache(async function getAllProducts() {
@@ -21,8 +28,14 @@ export const getAllProducts = unstable_cache(async function getAllProducts() {
 }, ['all-products'], { revalidate: 60, tags: ['products'] });
 
 export const getProduct = cache(async function getProduct(id) {
-  await connectDB();
-  return Product.findById(id).lean();
+  return unstable_cache(
+    async (productId) => {
+      await connectDB();
+      return Product.findById(productId).lean();
+    },
+    [`product-${id}`],
+    { revalidate: 60, tags: ['products', `product-${id}`] }
+  )(id);
 });
 
 export const getProductBySlug = unstable_cache(async function getProductBySlug(slug) {
@@ -47,8 +60,14 @@ export const getCategories = unstable_cache(async function getCategories(visible
 }, ['categories'], { revalidate: 60, tags: ['categories'] });
 
 export const getCategory = cache(async function getCategory(id) {
-  await connectDB();
-  return Category.findById(id).lean();
+  return unstable_cache(
+    async (categoryId) => {
+      await connectDB();
+      return Category.findById(categoryId).lean();
+    },
+    [`category-${id}`],
+    { revalidate: 60, tags: ['categories', `category-${id}`] }
+  )(id);
 });
 
 export const getCategoryBySlug = unstable_cache(async function getCategoryBySlug(slug) {
