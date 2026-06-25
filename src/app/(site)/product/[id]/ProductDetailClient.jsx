@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { MessageCircle, Ruler, ShoppingBag } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import Reveal from '@/components/ui/Reveal';
@@ -74,21 +75,32 @@ export default function ProductDetailClient({ product, settings }) {
         <Reveal className="product-gallery">
           <div className="thumbnail-list">
             {images.map((img, index) => (
-              <img
+              <div 
                 key={index}
-                src={img}
-                alt={`${product.name} ${index + 1}`}
                 className={`thumbnail btn-click-feedback ${activeImage === img ? 'active' : ''}`}
                 onClick={() => setActiveImage(img)}
-              />
+                style={{ position: 'relative', overflow: 'hidden' }}
+              >
+                <Image
+                  src={img}
+                  alt={`${product.name} ${index + 1}`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="80px"
+                />
+              </div>
             ))}
           </div>
-          <div className="main-image-container image-zoom-container">
-            <img 
+          <div className="main-image-container image-zoom-container" style={{ position: 'relative' }}>
+            <Image 
               key={activeImage}
               src={activeImage} 
               alt={product.name} 
               className="main-image fade-in" 
+              fill
+              priority
+              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         </Reveal>

@@ -45,15 +45,7 @@ export default async function AboutPage() {
           fontWeight: 400,
           letterSpacing: '0.02em'
         }}>Our Philosophy</h2>
-        <p style={{ 
-          fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', 
-          fontFamily: 'var(--font-body)', 
-          fontStyle: 'italic', 
-          color: 'var(--color-text)', 
-          lineHeight: '1.8',
-          letterSpacing: '0.02em',
-          fontWeight: 400
-        }}>
+        <p className="about-text">
           {s.aboutText || '"Umera Couture is a celebration of timeless elegance and modern sophistication. We believe in creating thoughtfully designed pieces that blend luxury with individuality, ensuring every outfit inspires confidence, grace, and effortless style."'}
         </p>
       </div>

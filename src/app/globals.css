@@ -25,7 +25,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 4rem;
-  --spacing-2xl: 8rem;
+  --spacing-2xl: 5rem;
 
   /* Misc */
   --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1387,11 +1387,17 @@ img {
 
 /* Header Mobile Badges & Buttons */
 .icon-btn .cart-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: var(--color-blush);
+  color: white;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 0.75rem;
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -1473,7 +1479,7 @@ img {
 /* Product Card Grid (2-column on mobile) */
 @media (max-width: 600px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
     gap: 12px !important;
   }
   .product-name {

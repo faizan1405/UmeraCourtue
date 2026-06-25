@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Search, Heart, ShoppingBag, Menu, X, Phone } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
@@ -73,7 +74,7 @@ const Header = () => {
 
           <nav className={`main-nav ${mobileMenuOpen ? 'open' : ''}`}>
             <div className="mobile-nav-header">
-              <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '50px', width: 'auto' }} />
+              <Image src="/umera-logo.png" alt="Umera Couture Logo" width={150} height={50} style={{ height: '50px', width: 'auto' }} priority />
               <button className="close-menu btn-click-feedback" onClick={() => setMobileMenuOpen(false)}>
                 <X size={24} />
               </button>
@@ -91,7 +92,7 @@ const Header = () => {
         {/* CENTER COLUMN: Logo */}
         <div className="header-center">
           <Link href="/" className="logo-container" onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}>
-            <img src="/umera-logo.png" alt="Umera Couture Logo" className="logo-img" />
+            <Image src="/umera-logo.png" alt="Umera Couture Logo" className="logo-img" width={150} height={50} priority />
           </Link>
         </div>
 

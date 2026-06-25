@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Heart, Eye, ShoppingBag } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import { useSiteData } from '@/context/SiteDataContext';
@@ -61,12 +62,14 @@ const ProductCard = ({ product, delay = 0 }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Link href={`/product/${productId}`}>
-          <img
+        <Link href={`/product/${productId}`} style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}>
+          <Image
             src={product.images?.[isHovered && product.images.length > 1 ? 1 : 0] || '/product_1.png'}
             alt={product.name}
             className="product-image"
-            loading="lazy"
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 50vw, 25vw"
           />
         </Link>
         

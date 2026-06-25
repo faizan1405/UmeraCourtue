@@ -26,7 +26,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 4rem;
-  --spacing-2xl: 8rem;
+  --spacing-2xl: 5rem;
 
   /* Misc */
   --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);

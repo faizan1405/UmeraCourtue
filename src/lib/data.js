@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import Category from '@/models/Category';
@@ -14,48 +15,48 @@ export const getProducts = cache(async function getProducts(filters = {}) {
   return Product.find(query).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1, createdAt: -1 }).lean();
 });
 
-export const getAllProducts = cache(async function getAllProducts() {
+export const getAllProducts = unstable_cache(async function getAllProducts() {
   await connectDB();
   return Product.find({}).sort({ sortOrder: 1, createdAt: -1 }).lean();
-});
+}, ['all-products'], { revalidate: 60, tags: ['products'] });
 
 export const getProduct = cache(async function getProduct(id) {
   await connectDB();
   return Product.findById(id).lean();
 });
 
-export const getProductBySlug = cache(async function getProductBySlug(slug) {
+export const getProductBySlug = unstable_cache(async function getProductBySlug(slug) {
   await connectDB();
   return Product.findOne({ slug, isVisible: true }).lean();
-});
+}, ['product-by-slug'], { revalidate: 60, tags: ['products'] });
 
-export const getFeaturedProducts = cache(async function getFeaturedProducts() {
+export const getFeaturedProducts = unstable_cache(async function getFeaturedProducts() {
   await connectDB();
   return Product.find({ isFeatured: true, isVisible: true }).select(PRODUCT_LIST_FIELDS).sort({ sortOrder: 1 }).lean();
-});
+}, ['featured-products'], { revalidate: 60, tags: ['products'] });
 
-export const getNewArrivals = cache(async function getNewArrivals() {
+export const getNewArrivals = unstable_cache(async function getNewArrivals() {
   await connectDB();
   return Product.find({ isNewArrival: true, isVisible: true }).select(PRODUCT_LIST_FIELDS).sort({ createdAt: -1 }).lean();
-});
+}, ['new-arrivals'], { revalidate: 60, tags: ['products'] });
 
-export const getCategories = cache(async function getCategories(visibleOnly = true) {
+export const getCategories = unstable_cache(async function getCategories(visibleOnly = true) {
   await connectDB();
   const query = visibleOnly ? { isVisible: true } : {};
   return Category.find(query).sort({ sortOrder: 1 }).lean();
-});
+}, ['categories'], { revalidate: 60, tags: ['categories'] });
 
 export const getCategory = cache(async function getCategory(id) {
   await connectDB();
   return Category.findById(id).lean();
 });
 
-export const getCategoryBySlug = cache(async function getCategoryBySlug(slug) {
+export const getCategoryBySlug = unstable_cache(async function getCategoryBySlug(slug) {
   await connectDB();
   return Category.findOne({ slug }).lean();
-});
+}, ['category-by-slug'], { revalidate: 60, tags: ['categories'] });
 
-export const getSettings = cache(async function getSettings() {
+export const getSettings = unstable_cache(async function getSettings() {
   await connectDB();
   let settings = await Settings.findOne({}).lean();
   if (!settings) {
@@ -80,17 +81,17 @@ export const getSettings = cache(async function getSettings() {
     };
   }
   return JSON.parse(JSON.stringify(settings));
-});
+}, ['site-settings'], { revalidate: 300, tags: ['settings'] });
 
-export const getPolicies = cache(async function getPolicies() {
+export const getPolicies = unstable_cache(async function getPolicies() {
   await connectDB();
   return Policy.find({}).lean();
-});
+}, ['all-policies'], { revalidate: 3600, tags: ['policies'] });
 
-export const getPolicy = cache(async function getPolicy(type) {
+export const getPolicy = unstable_cache(async function getPolicy(type) {
   await connectDB();
   return Policy.findOne({ type }).lean();
-});
+}, ['policy-by-type'], { revalidate: 3600, tags: ['policies'] });
 
 export async function getEnquiryCount() {
   await connectDB();

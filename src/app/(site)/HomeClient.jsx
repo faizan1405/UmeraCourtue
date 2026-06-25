@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ProductCard from '@/components/ui/ProductCard';
 import Reveal from '@/components/ui/Reveal';
 
@@ -15,8 +16,8 @@ export default function HomeClient({ products, newArrivals, categories, settings
     <div className="home-page">
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-bg">
-          <img src={s.heroBanner || '/hero_banner.png'} alt="Umera Couture Luxury Fashion" fetchPriority="high" />
+        <div className="hero-bg" style={{ position: 'absolute', inset: 0 }}>
+          <Image src={s.heroBanner || '/hero_banner.png'} alt="Umera Couture Luxury Fashion" priority fill style={{ objectFit: 'cover' }} />
           <div className="hero-overlay"></div>
         </div>
         <div className="hero-content">
@@ -52,8 +53,8 @@ export default function HomeClient({ products, newArrivals, categories, settings
           {categories.slice(0, 3).map((cat, idx) => (
             <Reveal key={cat._id} delay={idx * 150}>
               <Link href={`/collections/${cat.slug}`} className="collection-card card-hover-lift">
-                <div className="collection-image">
-                  <img src={cat.bannerImage || '/product_1.png'} alt={cat.name} loading="lazy" />
+                <div className="collection-image" style={{ position: 'relative', width: '100%', aspectRatio: '3/4' }}>
+                  <Image src={cat.bannerImage || '/product_1.png'} alt={cat.name} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 33vw" />
                 </div>
                 <div className="collection-info">
                   <h3>{cat.name}</h3>

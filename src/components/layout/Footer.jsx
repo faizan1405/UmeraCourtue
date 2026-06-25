@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { useSiteData } from '@/context/SiteDataContext';
 
@@ -16,7 +17,7 @@ const Footer = () => {
           
           <div className="footer-brand">
             <div className="footer-logo" style={{ marginBottom: '1rem' }}>
-              <img src="/umera-logo.png" alt="Umera Couture Logo" style={{ height: '90px', width: 'auto' }} />
+              <Image src="/umera-logo.png" alt="Umera Couture Logo" width={270} height={90} style={{ height: '90px', width: 'auto' }} />
             </div>
             <p className="footer-desc">
               A celebration of timeless elegance, refined craftsmanship, and modern sophistication.
